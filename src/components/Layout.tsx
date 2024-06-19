@@ -8,14 +8,14 @@ const Layout: React.FC = () => {
   const { isAuth } = useContext(AuthContext);
   return (
     <>
-      <header className='h-16 bg-slate-500/10'>
-        <div className='container h-full content-center'>
-          <nav className='flex flex-row w-full gap-4 justify-between text-xl content-center'>
+      <header className='h-16 bg-gray-300/10 backdrop-blur-lg	fixed top-0 w-full content-center'>
+        <div className='container'>
+          <nav className=' flex flex-row w-full gap-4 justify-between text-xl content-center'>
             <div className='space-x-4 content-center'>
               <Link to={'/'}>Logo</Link>
               {isAuth && (
                 <>
-                  <Link to={'/board'}>Board</Link>
+                  <Link to={'/my-boards'}>Board</Link>
                 </>
               )}
             </div>
@@ -32,7 +32,7 @@ const Layout: React.FC = () => {
           </nav>
         </div>
       </header>
-      <main className='h-[calc(100vh-4rem)]'>
+      <main className='mt-16 h-[calc(100vh-4rem)]'>
         <Outlet />
       </main>
     </>

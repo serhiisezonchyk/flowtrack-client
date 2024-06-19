@@ -16,7 +16,7 @@ const SignIn: React.FC = () => {
     try {
       await login(props);
       toast.success('Login succeed');
-      navigate('/board');
+      navigate('/my-boards');
     } catch (error) {
       if (isAxiosError<ResponseError>(error)) {
         toast.error(error.response?.data.error);

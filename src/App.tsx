@@ -6,13 +6,15 @@ import {
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import GreetPage from './pages/GreetPage';
-import Layout from './pages/Layout';
+import Layout from './components/Layout';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Board from './pages/Board';
 import PrivateRoute from './components/PrivateRoute';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './context/AuthContext';
+import SingleBoard from './pages/SingleBoard';
+import BoardLayout from './components/BoardLayout';
 
 function App() {
   const { checkAuth } = useContext(AuthContext);
@@ -22,7 +24,7 @@ function App() {
       element: <Layout />,
       children: [
         {
-          path: '/',
+          index: true,
           element: <GreetPage />,
         },
         {
@@ -34,12 +36,26 @@ function App() {
           element: <SignUp />,
         },
         {
-          path: '/board',
-          element: (
-            <PrivateRoute>
-              <Board />
-            </PrivateRoute>
-          ),
+          path: '/my-boards',
+          element:<BoardLayout/>,
+          children: [
+            {
+              index: true,
+              element: (
+                <PrivateRoute>
+                  <Board />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/my-boards/:slug',
+              element: (
+                <PrivateRoute>
+                  <SingleBoard />
+                </PrivateRoute>
+              ),
+            },
+          ],
         },
       ],
     },
