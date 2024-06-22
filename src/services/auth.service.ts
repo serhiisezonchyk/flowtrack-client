@@ -1,5 +1,5 @@
-import { User } from '@/data/types';
 import { $authHost, $host } from '@/services';
+import { User } from '@/types';
 import { SignInSchemaType } from '@/validation/schemas';
 
 export interface SignInResponse {

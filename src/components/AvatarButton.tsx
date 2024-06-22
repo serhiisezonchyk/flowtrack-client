@@ -1,4 +1,11 @@
+import { AuthContext } from '@/context/AuthContext';
+import { ResponseError } from '@/data/errorTypes';
+import { isAxiosError } from 'axios';
+import { User } from 'lucide-react';
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,14 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { User } from 'lucide-react';
-import { Button } from './ui/button';
-import { isAxiosError } from 'axios';
-import { ResponseError } from '@/data/errorTypes';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import inMemoryJWT from '@/lib/inMemoryJWT';
-import { AuthContext } from '@/context/AuthContext';
 
 const AvatarButton: React.FC = () => {
   const navigate = useNavigate();
@@ -35,14 +34,12 @@ const AvatarButton: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='outline' size='icon' className='rounded-full'>
+        <Button variant="outline" size="icon" className="rounded-full">
           <User size={24} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
-        <DropdownMenuItem onClick={() => console.log('ss')}>
-          Settings
-        </DropdownMenuItem>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => console.log('ss')}>Settings</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
-import { SignUpSchemaType, signUpSchema } from '../validation/schemas';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Input from '../components/Input';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { isAxiosError } from 'axios';
-import { ResponseError } from '@/data/errorTypes';
-import { toast } from 'react-toastify';
 import { AuthContext } from '@/context/AuthContext';
+import { ResponseError } from '@/data/errorTypes';
 import AuthService from '@/services/auth.service';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { isAxiosError } from 'axios';
+import React, { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Input from '../components/Input';
+import { SignUpSchemaType, signUpSchema } from '../validation/schemas';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -30,56 +30,52 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const { register, handleSubmit, formState, control } =
-    useForm<SignUpSchemaType>({
-      defaultValues: {
-        login: '',
-        password: '',
-      },
-      resolver: zodResolver(signUpSchema),
-    });
+  const { register, handleSubmit, formState, control } = useForm<SignUpSchemaType>({
+    defaultValues: {
+      login: '',
+      password: '',
+    },
+    resolver: zodResolver(signUpSchema),
+  });
   const { errors } = formState;
 
   if (isAuth) return <Navigate to={'/'} replace={true} />;
   return (
-    <div className='h-full flex justify-center items-center'>
-      <div className='w-full sm:w-[80%] md:w-[320px] space-y-2 text-right'>
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col px-2'>
+    <div className="h-full flex justify-center items-center">
+      <div className="w-full sm:w-[80%] md:w-[320px] space-y-2 text-right">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col px-2">
           <Input
             {...register('login')}
-            placeholder='Login'
-            className='border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300'
-            label='Login'
+            placeholder="Login"
+            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
+            label="Login"
             errorMessage={errors.login?.message}
           />
           <Input
             {...register('password')}
-            placeholder='Password'
-            type='password'
-            className='border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300'
-            label='Password'
+            placeholder="Password"
+            type="password"
+            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
+            label="Password"
             errorMessage={errors.password?.message}
           />
           <Input
             {...register('checkPassword')}
-            placeholder='Repeat password'
-            type='password'
-            className='border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300'
-            label='Repeat password'
+            placeholder="Repeat password"
+            type="password"
+            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
+            label="Repeat password"
             errorMessage={errors.password?.message}
           />
           <button
-            className='mt-8 py-4 px-6 rounded-sm bg-slate-500/10 duration-300 transition-all ease-out  hover:bg-slate-500/15'
-            type='submit'
+            className="mt-8 py-4 px-6 rounded-sm bg-slate-500/10 duration-300 transition-all ease-out  hover:bg-slate-500/15"
+            type="submit"
           >
             Sign Up
           </button>
         </form>
-        <div className='mr-2'>
-          <Link
-            to={'/sign-in'}
-            className='text-blue-500 underline hover:text-blue-600'
-          >
+        <div className="mr-2">
+          <Link to={'/sign-in'} className="text-blue-500 underline hover:text-blue-600">
             Already have an account?
           </Link>
         </div>

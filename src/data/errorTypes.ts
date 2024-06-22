@@ -7,4 +7,3 @@ export interface ValidationError {
   error: string;
   details?: { path: string; message: string }[];
 }
-

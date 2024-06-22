@@ -6,9 +6,7 @@ interface CreateTaskRespone {
 }
 export default class TaskService {
   static createTask = async (sectionId: string) => {
-    const { data } = await $authHost.post<CreateTaskRespone>(
-      `/task/${sectionId}`
-    );
+    const { data } = await $authHost.post<CreateTaskRespone>(`/task/${sectionId}`);
     return data.data;
   };
 }

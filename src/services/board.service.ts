@@ -24,8 +24,8 @@ export default class BoardService {
     const { data } = await $authHost.patch<ChangeIsSavedResponse>(`board/${id}`);
     return data;
   };
-  static createBoard = async(body: CreateBoardSchemaType) =>{
-    const { data } = await $authHost.post<ChangeIsSavedResponse>(`board`,body);
+  static createBoard = async (body: CreateBoardSchemaType) => {
+    const { data } = await $authHost.post<ChangeIsSavedResponse>(`board`, body);
     return data;
-  }
+  };
 }

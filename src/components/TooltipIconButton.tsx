@@ -1,10 +1,5 @@
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import React from 'react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { Button } from './ui/button';
 interface TooltipIconButtonProps {
   tooltip: string;
@@ -13,24 +8,12 @@ interface TooltipIconButtonProps {
   onClick: () => void;
   className?: string;
 }
-const TooltipIconButton: React.FC<TooltipIconButtonProps> = ({
-  tooltip,
-  children,
-  isPending,
-  onClick,
-  className,
-}) => {
+const TooltipIconButton: React.FC<TooltipIconButtonProps> = ({ tooltip, children, isPending, onClick, className }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
-            variant='ghost'
-            size='icon'
-            onClick={onClick}
-            disabled={isPending}
-            className={className}
-          >
+          <Button variant="ghost" size="icon" onClick={onClick} disabled={isPending} className={className}>
             {children}
           </Button>
         </TooltipTrigger>

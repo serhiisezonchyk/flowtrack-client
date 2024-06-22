@@ -1,7 +1,7 @@
 import inMemoryJWT from '@/lib/inMemoryJWT';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
-import AuthService from './auth.service';
 import { toast } from 'react-toastify';
+import AuthService from './auth.service';
 
 interface AdaptAxiosRequestConfig extends AxiosRequestConfig {
   headers: AxiosRequestHeaders;
@@ -17,16 +17,12 @@ const $authHost = axios.create({
   withCredentials: true,
 });
 
-const authInterceptor = (
-  config: AdaptAxiosRequestConfig
-): AdaptAxiosRequestConfig => {
+const authInterceptor = (config: AdaptAxiosRequestConfig): AdaptAxiosRequestConfig => {
   const accessToken = inMemoryJWT.getToken();
   if (accessToken) config.headers.authorization = `Bearer ${accessToken}`;
   return config;
 };
-$authHost.interceptors.request.use(authInterceptor, (error) =>
-  Promise.reject(error)
-);
+$authHost.interceptors.request.use(authInterceptor, (error) => Promise.reject(error));
 
 $authHost.interceptors.response.use(
   (response) => {
@@ -40,12 +36,12 @@ $authHost.interceptors.response.use(
         const resp = await AuthService.refresh();
         inMemoryJWT.setToken(resp.accessToken, resp.accessTokenExpiration);
       } catch (error) {
-        toast.error('Session expired.')
+        toast.error('Session expired.');
         return Promise.reject(error);
       }
       return $authHost(originalRequest);
     }
     return Promise.reject(error);
-  }
+  },
 );
-export { $host, $authHost };
+export { $authHost, $host };

@@ -1,17 +1,11 @@
-import { User } from '@/data/types';
 import inMemoryJWT from '@/lib/inMemoryJWT';
 import AuthService from '@/services/auth.service';
+import { User } from '@/types';
 import React, { createContext, useEffect, useState } from 'react';
 interface AuthContextState {
   isAuth: null | User;
   isAuthInProgress: boolean;
-  login: ({
-    login,
-    password,
-  }: {
-    login: string;
-    password: string;
-  }) => Promise<void>;
+  login: ({ login, password }: { login: string; password: string }) => Promise<void>;
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -23,21 +17,11 @@ export const AuthContext = createContext<AuthContextState>({
   logout: async () => {},
 });
 
-export const AuthContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState<null | User>(null);
   const [isAuthInProgress, setIsAuthInProgress] = useState(false);
 
-  const login = async ({
-    login,
-    password,
-  }: {
-    login: string;
-    password: string;
-  }) => {
+  const login = async ({ login, password }: { login: string; password: string }) => {
     setIsAuthInProgress(true);
     try {
       const resp = await AuthService.signIn({ login, password });
@@ -54,7 +38,7 @@ export const AuthContextProvider = ({
       const resp = await AuthService.refresh();
       inMemoryJWT.setToken(resp.accessToken, resp.accessTokenExpiration);
       setIsAuth(resp.data);
-    }catch(error){
+    } catch (error) {
       setIsAuth(null);
       inMemoryJWT.removeToken();
     } finally {
@@ -90,9 +74,7 @@ export const AuthContextProvider = ({
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ isAuth, isAuthInProgress, login, checkAuth, logout }}
-    >
+    <AuthContext.Provider value={{ isAuth, isAuthInProgress, login, checkAuth, logout }}>
       {children}
     </AuthContext.Provider>
   );

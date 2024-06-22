@@ -4,10 +4,10 @@ const GreetPage: React.FC = () => {
   return (
     <>
       <section>
-        <div className='container mx-auto px-4'>Some data</div>
+        <div className="container mx-auto px-4">Some data</div>
       </section>
       <section>
-        <div className='container mx-auto px-4'>Some data</div>
+        <div className="container mx-auto px-4">Some data</div>
       </section>
     </>
   );

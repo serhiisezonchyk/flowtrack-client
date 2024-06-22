@@ -1,4 +1,3 @@
-import { BoardType } from '@/types';
 import { create } from 'zustand';
 type BoardState = {
   currentBoardId: string | null;
