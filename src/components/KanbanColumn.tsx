@@ -4,12 +4,15 @@ import { Plus, Trash } from 'lucide-react';
 import SingleTask from './SingleTask';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Section, Task } from '@/types';
-import { cn } from '@/lib/utils';
+import { cn, errorHandler } from '@/lib/utils';
+import { SectionType, TaskType } from '@/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import TaskService from '@/services/task.service';
+import { toast } from 'react-toastify';
 interface KanbanColumnProps {
-  section: Section;
+  section: SectionType;
   className?: string;
-  tasks: Task[];
+  tasks: TaskType[];
 }
 
 const KanbanColumn: React.FC<KanbanColumnProps> = ({
@@ -17,6 +20,8 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
   className,
   tasks,
 }) => {
+  const queryClient = useQueryClient();
+
   const {
     setNodeRef,
     attributes,
@@ -36,18 +41,27 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
     transform: CSS.Transform.toString(transform),
   };
 
-  const singleTasksPosition = useMemo(
-    () => tasks.map((el) => el.id),
-    [tasks]
-  );
+  const singleTasksPosition = useMemo(() => tasks.map((el) => el.id), [tasks]);
   
+  const { mutate: addTask, isPending: isTaskAdding } = useMutation({
+    mutationKey: ['Create task'],
+    mutationFn: async (sectionId: string) => TaskService.createTask(sectionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['section'] });
+      toast.success('New task was added');
+    },
+    onError: (e) => {
+      const error = errorHandler(e);
+      toast.error(error.error);
+    },
+  });
   if (isDragging)
     return (
       <div
         ref={setNodeRef}
         style={style}
         className={cn(
-          'w-full sm:min-w-[350px] bg-slate-100 rounded-md opacity-50',
+          'w-full sm:w-[350px] bg-slate-100 rounded-md opacity-50',
           className
         )}
       ></div>
@@ -57,10 +71,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={cn(
-        'w-full sm:min-w-[350px] bg-slate-100 rounded-md',
-        className
-      )}
+      className={cn('w-full sm:w-[350px] bg-slate-100 rounded-md', className)}
     >
       {/* Header */}
       <div
@@ -72,14 +83,18 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
         <h3 className=''>{section.title}</h3>
         <div className='flex flex-row gap-4'>
           <TooltipIconButton
+            isPending={isTaskAdding}
             tooltip='Add new task'
-            onClick={() => {}}
+            onClick={() => {
+              addTask(section.id);
+            }}
             className='hover:bg-slate-300/40'
           >
             <Plus stroke='gray' size={20} cursor='pointer' />
           </TooltipIconButton>
           <TooltipIconButton
             tooltip='Delete column'
+            isPending={false}
             onClick={() => {}}
             className='hover:bg-slate-300/40'
           >

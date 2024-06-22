@@ -1,25 +1,24 @@
-export interface Board {
-  id: number;
+export interface BoardType {
+  id: string;
   title: string;
   description: string;
   isSaved: boolean;
   slug: string;
   icon: string;
+  userId:string;
   // Uncomment and define these fields if needed
-  // position: number;
-  // isSavedPosition: number;
   // user: User; // You need to define User interface if you use this field
 }
 
-export interface Section {
+export interface SectionType {
   id: string;
   title: string;
-  position: number;
+  position: number; 
   // Uncomment and define this field if needed
   // board: Board; // Reference to the Board type
-  tasks: Task[];
+  tasks: TaskType[]; 
 }
-export interface Task {
+export interface TaskType {
   id: string;
   title: string;
   content: string;

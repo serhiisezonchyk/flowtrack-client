@@ -1,9 +1,9 @@
-import { Board } from '@/types';
+import { BoardType } from '@/types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface BoardItemProps {
-  board: Board;
+  board: BoardType;
 }
 const BoardItem: React.FC<BoardItemProps> = ({ board }) => {
   return (

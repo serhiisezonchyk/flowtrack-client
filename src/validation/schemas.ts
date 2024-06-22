@@ -43,3 +43,8 @@ export const signInSchema = z.object({
   // }),
 });
 export type SignInSchemaType = z.infer<typeof signInSchema>;
+
+export const createBoardSchema = z.object({
+  title: z.string().min(4, { message: 'Title should contain 4 or more symbols' }),
+});
+export type CreateBoardSchemaType = z.infer<typeof createBoardSchema>;

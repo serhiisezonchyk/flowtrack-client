@@ -9,20 +9,28 @@ import { Button } from './ui/button';
 interface TooltipIconButtonProps {
   tooltip: string;
   children: React.ReactNode;
+  isPending: boolean;
   onClick: () => void;
-  className?:string;
+  className?: string;
 }
 const TooltipIconButton: React.FC<TooltipIconButtonProps> = ({
   tooltip,
   children,
+  isPending,
   onClick,
-  className
+  className,
 }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant='ghost' size='icon' onClick={onClick} className={className}>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={onClick}
+            disabled={isPending}
+            className={className}
+          >
             {children}
           </Button>
         </TooltipTrigger>

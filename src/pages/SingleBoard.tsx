@@ -3,26 +3,54 @@ import Input from '@/components/Input';
 import Kanban from '@/components/Kanban';
 import TooltipIconButton from '@/components/TooltipIconButton';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
-import { AuthContext } from '@/context/AuthContext';
-import { boards } from '@/mock';
+import BoardService from '@/services/board.service';
+import { useBoardStore } from '@/store/board.store';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Star, Trash2 } from 'lucide-react';
-import React, { useContext, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const SingleBoard = () => {
-  const { isAuth } = useContext(AuthContext);
+  const queryClient = useQueryClient();
   const { slug } = useParams();
-  const data = boards.find((el) => el.slug === slug);
-  const [icon, setIcon] = useState<string>(data?.icon as string);
-  const [title, setTitle] = useState<string>(data?.title as string);
-  const [description, setDescription] = useState<string>(
-    data?.description as string
-  );
 
-  const onIconChange = (newIcon: string) => {
-    setIcon(newIcon);
-  };
+  const setBoardId = useBoardStore((state) => state.setCurrentBoardId);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['board', slug],
+    queryFn: () => BoardService.getBoard(slug as string),
+    enabled: !!slug,
+  });
+  const { mutate: changeIsSaved, isPending: isIsSavedPending } = useMutation({
+    mutationKey: ['Change isSaved'],
+    mutationFn: async (id: string) => BoardService.changeIsSaved(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['board', slug] });
+    },
+  });
+  const [boardData, setBoardData] = useState({
+    icon: '',
+    title: '',
+    description: '',
+  });
+  useEffect(() => {
+    if (data) {
+      setBoardId(data.id);
+      setBoardData({
+        icon: data.icon,
+        title: data.title,
+        description: data.description,
+      });
+    }
+    return () => {
+      setBoardId(null);
+    };
+  }, [data]);
+  const onIconChange = useCallback((newIcon: string) => {
+    setBoardData((prevData) => ({ ...prevData, icon: newIcon }));
+  }, []);
   return (
     <div>
       {/* Main info */}
@@ -31,35 +59,69 @@ const SingleBoard = () => {
           <div className='space-y-4'>
             {/* Actions/emojis */}
             <div className='w-full flex flex-row justify-between items-center'>
-              <EmojiPicker icon={icon} onChange={onIconChange} />
+              {!isLoading ? (
+                <EmojiPicker icon={boardData.icon} onChange={onIconChange} />
+              ) : (
+                <Skeleton className='size-9 rounded-full' />
+              )}
               <div className='flex flex-row gap-8'>
+                <Button
+                  variant={'ghost'}
+                  size='icon'
+                  disabled={isIsSavedPending}
+                  onClick={() => {
+                    changeIsSaved(data?.id as string);
+                  }}
+                >
+                  <Star
+                    stroke='gray'
+                    fill={data?.isSaved ? 'yellow' : 'transparent'}
+                    size={24}
+                    cursor='pointer'
+                  />
+                </Button>
                 <TooltipIconButton
-                  tooltip='Add to favourite'
+                  tooltip='Remove board'
+                  isPending={false}
                   onClick={() => {}}
                 >
-                  <Star stroke='gray' size={24} cursor='pointer' />
-                </TooltipIconButton>
-                <TooltipIconButton tooltip='Remove board' onClick={() => {}}>
                   <Trash2 stroke='red' size={24} cursor='pointer' />
                 </TooltipIconButton>
               </div>
             </div>
 
             {/* Title */}
-            <Input
-              value={title}
-              className='border-none mb-0 text-2xl px-0'
-              onChange={(e) => setTitle(e.target.value)}
-            />
+            {isLoading ? (
+              <Skeleton className='border-none mb-0 text-2xl px-0 w-full h-12' />
+            ) : (
+              <Input
+                value={boardData.title}
+                className='border-none mb-0 text-2xl px-0'
+                onChange={(e) =>
+                  setBoardData((prevData) => ({
+                    ...prevData,
+                    title: e.target.value,
+                  }))
+                }
+              />
+            )}
 
             {/* Description */}
-            <Textarea
-              className='border-none resize-none px-0'
-              defaultValue={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            />
+            {isLoading ? (
+              <Skeleton className='border-none resize-none px-0 w-full h-20' />
+            ) : (
+              <Textarea
+                className='border-none resize-none px-0'
+                defaultValue={boardData.description}
+                disabled={isLoading}
+                onChange={(e) =>
+                  setBoardData((prevData) => ({
+                    ...prevData,
+                    description: e.target.value,
+                  }))
+                }
+              />
+            )}
           </div>
         </div>
         <Kanban />

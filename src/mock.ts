@@ -1,6 +1,6 @@
-import { Board, Section, Task } from './types';
+import { BoardType, SectionType } from './types';
 
-export const boards: Board[] = [
+export const boards: BoardType[] = [
   {
     id: 1,
     title: 'Personal',
@@ -10,8 +10,6 @@ export const boards: Board[] = [
     isSaved: true,
     slug: 'personal',
     icon: '🏠', // Example: house icon
-    // position:number,
-    // isSavedPosition: number,
     // user: User
   },
   {
@@ -72,37 +70,29 @@ export const boards: Board[] = [
   },
 ];
 
-export const sections: Section[] = [
+export const sections: SectionType[] = [
   {
     id: 'Section1',
     title: 'Ideas',
     position: 0,
     tasks: [
-      {
-        id: 'Task1',
-        title: 'Test',
-        content: `dqwfwff
-      fqwff
-      wfqwfwqf`,
-        position: 0,
-        sectionId: 'Section1',
-      },
+
       {
         id: 'Task2',
         title: 'Tes2',
         content: `dqewfwff
       fqwff
       wfqwfwqf`,
-        position: 1,
+        position: 0,
         sectionId: 'Section1',
       },
       {
-        id: 'Task3',
-        title: 'Test3',
+        id: 'Task1',
+        title: 'Test',
         content: `dqwfwff
-      fqwff3
+      fqwff
       wfqwfwqf`,
-        position: 2,
+        position: 1,
         sectionId: 'Section1',
       },
     ],
@@ -127,7 +117,17 @@ export const sections: Section[] = [
     id: 'Section3',
     title: 'Done',
     position: 2,
-    tasks: [],
+    tasks: [
+      {
+        id: 'Task3',
+        title: 'Test3',
+        content: `dqwfwff
+      fqwff3
+      wfqwfwqf`,
+        position: 0,
+        sectionId: 'Section1',
+      },
+    ],
   },
   {
     id: 'Section4',

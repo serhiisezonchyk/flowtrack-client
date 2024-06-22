@@ -1,10 +1,10 @@
 import { useSortable } from '@dnd-kit/sortable';
 import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
-import { Task } from '@/types';
+import { TaskType } from '@/types';
 
 interface SingleTaskProps {
-  task: Task;
+  task: TaskType;
 }
 const SingleTask: React.FC<SingleTaskProps> = ({ task }) => {
   const {
@@ -30,8 +30,7 @@ const SingleTask: React.FC<SingleTaskProps> = ({ task }) => {
     return (
       <div
         ref={setNodeRef}
-        // style={style}
-        className='m-2 px-4 py-2 bg-slate-300/40 rounded-md h-10'
+        className='m-2 px-4 py-2 bg-slate-300/40 rounded-md h-10 backdrop-blur-lg'
       ></div>
     );
 
