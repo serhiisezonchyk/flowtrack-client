@@ -68,3 +68,4 @@ export const useCreateBoard = ({ onSuccess, onError }: { onSuccess?: () => void;
     },
   });
 };
+

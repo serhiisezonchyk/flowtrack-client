@@ -59,7 +59,11 @@ const Kanban: React.FC<KanbanProps> = () => {
         </div>
       </div>
       {/* sections */}
-      {isSectionsPending ? <KanbanSectionsSkeleton /> : !isSectionsError && <KanbanSections data={sections} />}
+      {isSectionsPending ? (
+        <KanbanSectionsSkeleton />
+      ) : (
+        !isSectionsError && <KanbanSections data={sections} boardId={boardId} />
+      )}
     </div>
   );
 };

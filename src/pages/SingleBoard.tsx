@@ -1,18 +1,22 @@
+import AlertButton from '@/components/AlertButton';
 import EmojiPicker from '@/components/EmojiPicker';
 import Input from '@/components/Input';
 import Kanban from '@/components/Kanban';
-import TooltipIconButton from '@/components/TooltipIconButton';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
+import { errorHandler } from '@/lib/utils';
 import { useBoard, useChangeBoardSaved } from '@/queries/board.queries';
+import BoardService from '@/services/board.service';
 import { useBoardStore } from '@/store/board.store';
 import { Star, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SingleBoard = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   if (!slug) return;
 
   const setBoardId = useBoardStore((state) => state.setCurrentBoardId);
@@ -22,6 +26,16 @@ const SingleBoard = () => {
     slug,
   });
 
+  const handleDeleteBoard = useCallback(async (id: string) => {
+    try {
+      await BoardService.deleteBoard(id);
+      toast.success(`Board was deleted successfully`);
+      navigate('/my-boards');
+    } catch (e) {
+      const error = errorHandler(e);
+      toast.error(error.error);
+    }
+  }, []);
   const [boardData, setBoardData] = useState({
     icon: '',
     title: '',
@@ -65,11 +79,19 @@ const SingleBoard = () => {
                     changeIsSaved(board?.id as string);
                   }}
                 >
+                  <span className="sr-only">Save board</span>
                   <Star stroke="gray" fill={board?.isSaved ? 'yellow' : 'transparent'} size={24} cursor="pointer" />
                 </Button>
-                <TooltipIconButton tooltip="Remove board" isPending={false} onClick={() => {}}>
-                  <Trash2 stroke="red" size={24} cursor="pointer" />
-                </TooltipIconButton>
+                <AlertButton
+                  title="Are you absolutely sure?"
+                  description="This action cannot be undone. This will permanently delete your board."
+                  actionTrigger={() => handleDeleteBoard(board?.id as string)}
+                >
+                  <Button variant={'ghost'} size="icon">
+                    <span className="sr-only">Delete board</span>
+                    <Trash2 stroke="red" size={24} cursor="pointer" />
+                  </Button>
+                </AlertButton>
               </div>
             </div>
 

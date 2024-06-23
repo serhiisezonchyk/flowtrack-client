@@ -13,7 +13,7 @@ const BoardLayout = () => {
   const pathnames = location.pathname.split('/').filter((x) => x);
   return (
     <>
-      <div className="container">
+      <div className="container overflow-hidden">
         <Breadcrumb className="hidden md:flex py-4 h-[52px]">
           <BreadcrumbList>
             {pathnames.map((el, index) =>
@@ -35,7 +35,7 @@ const BoardLayout = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="w-full h-[calc(100vh-4rem)] sm:h-[calc(100vh-4rem-52px)] overflow-y-auto">
+      <div className="w-full h-[calc(100vh-4rem)] sm:h-[calc(100vh-4rem-52px)] overflow-x-hidden">
         <Outlet />
       </div>
     </>

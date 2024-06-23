@@ -1,3 +1,5 @@
+import { errorHandler } from '@/lib/utils';
+import { useSectionPositions } from '@/queries/section.queries';
 import { SectionType, TaskType } from '@/types';
 import {
   DndContext,
@@ -13,6 +15,7 @@ import {
 import { SortableContext, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { toast } from 'react-toastify';
 import KanbanColumn from './KanbanColumn';
 import SingleTask from './SingleTask';
 import { Skeleton } from './ui/skeleton';
@@ -29,11 +32,18 @@ export const KanbanSectionsSkeleton: React.FC = ({}) => {
 
 interface KanbanSectionsProps {
   data: SectionType[];
+  boardId: string;
 }
-const KanbanSections: React.FC<KanbanSectionsProps> = ({ data }) => {
+const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
   const [activeSection, setActiveSection] = useState<SectionType | null>(null);
   const [activeTask, setActiveTask] = useState<TaskType | null>(null);
   const [sections, setSections] = useState<SectionType[]>([]);
+  const { mutate: swapSectionsPosition } = useSectionPositions({
+    onError: (e) => {
+      const error = errorHandler(e);
+      toast.error(error.error);
+    },
+  });
   useEffect(() => {
     setSections(data);
   }, [data]);
@@ -183,7 +193,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data }) => {
         }));
         setSections(newSections);
 
-        console.log(newSections);
+        swapSectionsPosition({ boardId, newData: newSections });
       }
       return;
     }
@@ -201,7 +211,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data }) => {
     <div className="mt-2">
       <div className="container">
         <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
-          <div className="flex flex-row gap-4 overflow-x-auto w-full flex-wrap sm:flex-nowrap sm:max-w-full h-full">
+          <div className="flex flex-row gap-4 flex-wrap overflow-x-auto sm:flex-nowrap h-full">
             <SortableContext items={sectionsPositions}>
               {sections.map((section) => (
                 <KanbanColumn key={section.id} section={section} tasks={section.tasks} />

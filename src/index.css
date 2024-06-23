@@ -67,6 +67,9 @@
 }
 
 @layer base {
+  html{
+    @apply overflow-x-hidden overflow-y-hidden
+  }
   * {
     @apply border-border;
   }

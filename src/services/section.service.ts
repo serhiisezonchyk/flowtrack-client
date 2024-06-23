@@ -16,4 +16,8 @@ export default class SectionService {
     const { data } = await $authHost.post<GetResponseWithMessage>(`/section/${boardId}`);
     return data.data;
   };
+  static changeSectionPositions = async (boardId: string, newData: SectionType[]) => {
+    const data = await $authHost.put<GetResponseWithMessage>(`/section/update-section-position/${boardId}`,newData);
+    return data.data;
+  };
 }

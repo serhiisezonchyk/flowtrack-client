@@ -28,4 +28,8 @@ export default class BoardService {
     const { data } = await $authHost.post<ChangeIsSavedResponse>(`board`, body);
     return data;
   };
+  static deleteBoard = async (id:string) => {
+    const { data } = await $authHost.delete(`board/${id}`);
+    return data;
+  };
 }
