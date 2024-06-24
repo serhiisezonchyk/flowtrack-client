@@ -1,5 +1,5 @@
 import { $authHost, $host } from '@/services';
-import { User } from '@/types';
+import { ResponseType, User } from '@/types';
 import { SignInSchemaType } from '@/validation/schemas';
 
 export interface SignInResponse {
@@ -8,25 +8,17 @@ export interface SignInResponse {
   data: User;
 }
 
-export interface SignUpResponse {
-  message: string;
-}
-
-export interface LogoutResponse {
-  message: string;
-}
-
 export default class AuthService {
   static signIn = async (body: SignInSchemaType) => {
     const { data } = await $host.post<SignInResponse>('/auth/sign-in', body);
     return data;
   };
   static signUp = async (body: SignInSchemaType) => {
-    const { data } = await $host.post<SignUpResponse>('/auth/sign-up', body);
+    const { data } = await $host.post<Omit<ResponseType, 'data'>>('/auth/sign-up', body);
     return data;
   };
   static logout = async () => {
-    const { data } = await $authHost.post<LogoutResponse>('/auth/logout');
+    const { data } = await $authHost.post<Omit<ResponseType, 'data'>>('/auth/logout');
     return data;
   };
   static refresh = async () => {

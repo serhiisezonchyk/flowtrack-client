@@ -33,3 +33,8 @@ export interface TaskType {
   // Uncomment and define this field if needed
   sectionId: string; // Reference to the sectionId
 }
+
+export interface ResponseType<T = undefined> {
+  message: string;
+  data?: T;
+}

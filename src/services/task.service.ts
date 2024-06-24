@@ -1,12 +1,13 @@
-import { TaskType } from '@/types';
-import { $authHost } from '.';
+import { $authHost } from '@/services';
+import { ResponseType, TaskType } from '@/types';
 
-interface CreateTaskRespone {
-  data: TaskType;
-}
 export default class TaskService {
   static createTask = async (sectionId: string) => {
-    const { data } = await $authHost.post<CreateTaskRespone>(`/task/${sectionId}`);
+    const { data } = await $authHost.post<Omit<ResponseType<TaskType>, 'message'>>(`/task/${sectionId}`);
     return data.data;
+  };
+  static deleteTask = async (taskId: String) => {
+    const { data } = await $authHost.delete<Omit<ResponseType, 'data'>>(`/task/${taskId}`);
+    return data.message;
   };
 }
