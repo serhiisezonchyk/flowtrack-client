@@ -17,6 +17,7 @@ import {
 import { SortableContext, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import React, { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import KanbanColumn from './KanbanColumn';
 import SingleTask from './SingleTask';
@@ -37,6 +38,9 @@ interface KanbanSectionsProps {
   boardId: string;
 }
 const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [activeSection, setActiveSection] = useState<SectionType | null>(null);
   const [activeTask, setActiveTask] = useState<TaskType | null>(null);
   const [sections, setSections] = useState<SectionType[]>([]);
@@ -239,7 +243,9 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
       if (taskId) deleteTask(taskId);
     }
     if (taskElement) {
-      console.log(taskElement);
+      const currentPath = location.pathname;
+      console.log(currentPath)
+      navigate(`${currentPath}/${taskElement}`);
     }
   };
   return (

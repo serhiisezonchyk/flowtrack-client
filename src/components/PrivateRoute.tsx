@@ -18,7 +18,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
     );
   }
 
-  if (!isAuth) {
+  if (!isAuth && !isAuthInProgress) {
     return <Navigate to="/sign-in" replace />;
   } else return <>{children}</>;
 };

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { lazy, useContext, useEffect } from 'react';
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,10 +8,11 @@ import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthContext';
 import Board from './pages/Board';
 import GreetPage from './pages/GreetPage';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
 import SingleBoard from './pages/SingleBoard';
+import SingleTaskPage from './pages/SingleTaskPage';
 
+const SignIn = lazy(() => import('./pages/SignIn'));
+const SignUp = lazy(() => import('./pages/SignUp'));
 function App() {
   const { checkAuth } = useContext(AuthContext);
   const router = createBrowserRouter([
@@ -24,43 +25,48 @@ function App() {
           element: <GreetPage />,
         },
         {
-          path: '/sign-in',
+          path: 'sign-in',
           element: <SignIn />,
         },
         {
-          path: '/sign-up',
+          path: 'sign-up',
           element: <SignUp />,
         },
         {
-          path: '/my-boards',
-          element: <BoardLayout />,
+          path: 'my-boards',
+          element: (
+            <PrivateRoute>
+              <BoardLayout />
+            </PrivateRoute>
+          ),
           children: [
             {
               index: true,
-              element: (
-                <PrivateRoute>
-                  <Board />
-                </PrivateRoute>
-              ),
+              element: <Board />,
             },
             {
-              path: '/my-boards/:slug',
-              element: (
-                <PrivateRoute>
-                  <SingleBoard />
-                </PrivateRoute>
-              ),
+              path: ':slug',
+              children: [
+                {
+                  index: true,
+                  element: <SingleBoard />,
+                },
+                {
+                  path: ':taskId',
+                  element: <SingleTaskPage />,
+                },
+              ],
             },
           ],
         },
       ],
     },
-
     {
       path: '*',
-      element: <Navigate to={'/'} replace={true} />,
+      element: <Navigate to="/" replace />,
     },
   ]);
+
   useEffect(() => {
     const fetchCheck = async () => {
       await checkAuth();

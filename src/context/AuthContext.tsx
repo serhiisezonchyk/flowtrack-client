@@ -19,7 +19,7 @@ export const AuthContext = createContext<AuthContextState>({
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState<null | User>(null);
-  const [isAuthInProgress, setIsAuthInProgress] = useState(false);
+  const [isAuthInProgress, setIsAuthInProgress] = useState(true);
 
   const login = async ({ login, password }: { login: string; password: string }) => {
     setIsAuthInProgress(true);

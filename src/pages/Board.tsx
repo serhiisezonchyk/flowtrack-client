@@ -8,8 +8,8 @@ import React, { useMemo } from 'react';
 const Board: React.FC = () => {
   const { data: boards, isFetching: isBoardsFetching } = useBoards();
 
-  const savedBoards = useMemo(() => boards.filter((el) => el.isSaved === true), [boards]);
-  const privateBoards = useMemo(() => boards.filter((el) => el.isSaved === false), [boards]);
+  const savedBoards = useMemo(() => boards?.filter((el) => el.isSaved === true) || [], [boards]) ;
+  const privateBoards = useMemo(() => boards?.filter((el) => el.isSaved === false) || [], [boards]);
   if (isBoardsFetching)
     return (
       <div className="h-full grid items-center justify-center">
