@@ -48,7 +48,7 @@ const Kanban: React.FC<KanbanProps> = () => {
           <div className="mt-2 pb-2 flex flex-row justify-between items-center">
             <Button
               variant="ghost"
-              className="text-[16px] text-cyan-800 hover:text-cyan-800"
+              className="text-[16px] text-cyan-800 hover:text-cyan-800 active:text-cyan-800"
               disabled={isCreateSectionPending}
               onClick={() => createSection(boardId)}
             >

@@ -8,12 +8,13 @@ import {
   DragOverlay,
   DragStartEvent,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-toastify';
 import KanbanColumn from './KanbanColumn';
@@ -50,13 +51,19 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
   const sectionsPositions = useMemo(() => sections.map((col) => col.id), [sections]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 3,
+        distance: 10,
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
     }),
   );
   const onDragStart = (event: DragStartEvent) => {
@@ -206,10 +213,26 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
       return;
     }
   };
+  const handleClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
+    const target = e.target as HTMLElement;
+    const deleteButton = target.closest('[data-delete-task]') as HTMLElement;
+    const taskElement = target.getAttribute('data-task-id');
+
+    if (deleteButton) {
+      const taskEl = target.closest('[data-task-id]') as HTMLElement;
+      const taskId = taskEl?.getAttribute('data-task-id');
+      console.log('delete', taskId);
+    }
+    if (taskElement) {
+      console.log(taskElement);
+    }
+  };
   return (
     <div className="mt-2">
-      <div className="container">
+      <div className="container" onClick={handleClick}>
         <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
           <div className="flex flex-row gap-4 flex-wrap overflow-x-auto sm:flex-nowrap h-full">
             <SortableContext items={sectionsPositions}>

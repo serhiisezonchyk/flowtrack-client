@@ -68,14 +68,14 @@ const SignUp: React.FC = () => {
             errorMessage={errors.password?.message}
           />
           <button
-            className="mt-8 py-4 px-6 rounded-sm bg-slate-500/10 duration-300 transition-all ease-out  hover:bg-slate-500/15"
+            className="mt-8 py-4 px-6 rounded-sm bg-slate-500/10 duration-300 transition-all ease-out  hover:bg-slate-500/15 active:bg-slate-500/15"
             type="submit"
           >
             Sign Up
           </button>
         </form>
         <div className="mr-2">
-          <Link to={'/sign-in'} className="text-blue-500 underline hover:text-blue-600">
+          <Link to={'/sign-in'} className="text-blue-500 underline hover:text-blue-600 active:bg-slate-500/15">
             Already have an account?
           </Link>
         </div>
