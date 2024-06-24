@@ -68,6 +68,7 @@ export const useDeleteSection = ({
     onMutate: async (sectionId) => {
       await queryClient.cancelQueries({ queryKey: ['section', boardId] });
       const previousSections = queryClient.getQueryData(['section', boardId]) as SectionType[];
+
       const updatedData = previousSections
         .filter((el) => el.id !== sectionId)
         .map((el, index) => ({ ...el, position: index }));

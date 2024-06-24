@@ -11,7 +11,7 @@ export default class SectionService {
     return data.data;
   };
   static changeSectionPositions = async (boardId: string, newData: SectionType[]) => {
-    const data = await $authHost.put<Omit<ResponseType<SectionType>, 'message'>>(
+    const data = await $authHost.put<Omit<ResponseType<SectionType[]>, 'message'>>(
       `/section/update-section-position/${boardId}`,
       newData,
     );

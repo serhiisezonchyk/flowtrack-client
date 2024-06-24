@@ -1,5 +1,6 @@
 import { errorHandler } from '@/lib/utils';
 import { useSectionPositions } from '@/queries/section.queries';
+import { useDeleteTask, useTaskPositions } from '@/queries/task.query';
 import { SectionType, TaskType } from '@/types';
 import {
   DndContext,
@@ -39,14 +40,25 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
   const [activeSection, setActiveSection] = useState<SectionType | null>(null);
   const [activeTask, setActiveTask] = useState<TaskType | null>(null);
   const [sections, setSections] = useState<SectionType[]>([]);
+  const onError = (e: any) => {
+    const error = errorHandler(e);
+    toast.error(error.error);
+  };
   const { mutate: swapSectionsPosition } = useSectionPositions({
-    onError: (e) => {
-      const error = errorHandler(e);
-      toast.error(error.error);
+    onError,
+  });
+  const { mutate: swapTaskPositions } = useTaskPositions({
+    onError,
+  });
+  const { mutate: deleteTask } = useDeleteTask({
+    boardId,
+    onSuccess: () => {
+      toast.success('Task was deleted successfully');
     },
+    onError,
   });
   useEffect(() => {
-    setSections(data);
+    setSections(structuredClone(data));
   }, [data]);
   const sectionsPositions = useMemo(() => sections.map((col) => col.id), [sections]);
 
@@ -209,7 +221,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
       (active.data.current?.type === 'Task' && over.data.current?.type === 'Section') ||
       (over.data.current?.type === 'Task' && active && over)
     ) {
-      console.log(sections);
+      swapTaskPositions({ boardId, newData: sections });
       return;
     }
   };
@@ -224,7 +236,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
     if (deleteButton) {
       const taskEl = target.closest('[data-task-id]') as HTMLElement;
       const taskId = taskEl?.getAttribute('data-task-id');
-      console.log('delete', taskId);
+      if (taskId) deleteTask(taskId);
     }
     if (taskElement) {
       console.log(taskElement);
@@ -237,7 +249,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
           <div className="flex flex-row gap-4 flex-wrap overflow-x-auto sm:flex-nowrap h-full">
             <SortableContext items={sectionsPositions}>
               {sections.map((section) => (
-                <KanbanColumn key={section.id} section={section} tasks={section.tasks} boardId={boardId}/>
+                <KanbanColumn key={section.id} section={section} tasks={section.tasks} boardId={boardId} />
               ))}
             </SortableContext>
           </div>

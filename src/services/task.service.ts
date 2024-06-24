@@ -1,5 +1,5 @@
 import { $authHost } from '@/services';
-import { ResponseType, TaskType } from '@/types';
+import { ResponseType, SectionType, TaskType } from '@/types';
 
 export default class TaskService {
   static createTask = async (sectionId: string) => {
@@ -9,5 +9,13 @@ export default class TaskService {
   static deleteTask = async (taskId: String) => {
     const { data } = await $authHost.delete<Omit<ResponseType, 'data'>>(`/task/${taskId}`);
     return data.message;
+  };
+
+  static changeTaskPositions = async (boardId: string, newData: SectionType[]) => {
+    const data = await $authHost.put<Omit<ResponseType<SectionType[]>, 'message'>>(
+      `/section/update-task-position/${boardId}`,
+      newData,
+    );
+    return data.data;
   };
 }
