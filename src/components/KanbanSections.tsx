@@ -237,7 +237,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
           <div className="flex flex-row gap-4 flex-wrap overflow-x-auto sm:flex-nowrap h-full">
             <SortableContext items={sectionsPositions}>
               {sections.map((section) => (
-                <KanbanColumn key={section.id} section={section} tasks={section.tasks} />
+                <KanbanColumn key={section.id} section={section} tasks={section.tasks} boardId={boardId}/>
               ))}
             </SortableContext>
           </div>
@@ -250,6 +250,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
                   tasks={activeSection.tasks}
                   className="bg-transaprent backdrop-blur-lg border-2 shadow-2xl"
                   section={activeSection}
+                  boardId={boardId}
                 />
               )}
               {activeTask && <SingleTask task={activeTask} />}

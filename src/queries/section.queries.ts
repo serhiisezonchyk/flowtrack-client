@@ -30,11 +30,7 @@ export const useCreateSection = ({
     },
   });
 };
-export const useSectionPositions = ({
-  onError,
-}: {
-  onError?: (error: any) => void;
-}) => {
+export const useSectionPositions = ({ onError }: { onError?: (error: any) => void }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Change section positions'],
@@ -42,16 +38,49 @@ export const useSectionPositions = ({
       SectionService.changeSectionPositions(boardId, newData),
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: ['section', variables.boardId] });
-      const previousBoard = queryClient.getQueryData(['section', variables.boardId]);
+      const previousSection = queryClient.getQueryData(['section', variables.boardId]);
       queryClient.setQueryData(['section', variables.boardId], variables.newData);
-      return { previousBoard };
+      return { previousSection };
     },
     onError: (error, variables, context: any) => {
-      queryClient.setQueryData(['section', variables.boardId], context.previousBoard);
+      queryClient.setQueryData(['section', variables.boardId], context.previousSection);
       onError?.(error);
     },
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['section', variables.boardId], data.data);
+    },
+  });
+};
+
+export const useDeleteSection = ({
+  boardId,
+  onSuccess,
+  onError,
+}: {
+  boardId: string;
+  onSuccess?: () => void;
+  onError?: (error: any) => void;
+}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['Delete section'],
+    mutationFn: async (sectionId: string) => SectionService.deleteSection(sectionId),
+    onMutate: async (sectionId) => {
+      await queryClient.cancelQueries({ queryKey: ['section', boardId] });
+      const previousSections = queryClient.getQueryData(['section', boardId]) as SectionType[];
+      const updatedData = previousSections
+        .filter((el) => el.id !== sectionId)
+        .map((el, index) => ({ ...el, position: index }));
+      queryClient.setQueryData(['section', boardId], updatedData);
+      return { previousSections };
+    },
+    onError: (error, _, context: any) => {
+      queryClient.setQueryData(['section', boardId], context.previousSections);
+      onError?.(error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['section', boardId] });
+      onSuccess?.();
     },
   });
 };

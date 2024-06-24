@@ -17,7 +17,11 @@ export default class SectionService {
     return data.data;
   };
   static changeSectionPositions = async (boardId: string, newData: SectionType[]) => {
-    const data = await $authHost.put<GetResponseWithMessage>(`/section/update-section-position/${boardId}`,newData);
+    const data = await $authHost.put<GetResponseWithMessage>(`/section/update-section-position/${boardId}`, newData);
+    return data.data;
+  };
+  static deleteSection = async (sectionId: string) => {
+    const data = await $authHost.delete<Omit<GetResponseWithMessage, 'data'>>(`/section/${sectionId}`);
     return data.data;
   };
 }
