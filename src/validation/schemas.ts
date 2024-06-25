@@ -48,3 +48,11 @@ export const createBoardSchema = z.object({
   title: z.string().min(4, { message: 'Title should contain 4 or more symbols' }),
 });
 export type CreateBoardSchemaType = z.infer<typeof createBoardSchema>;
+
+export const updateSectionSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(4, { message: 'Title is required and cannot be empty or whitespace. Minimum length - 4s.' }),
+});
+export type UpdateSectionSchemaType = z.infer<typeof updateSectionSchema>;

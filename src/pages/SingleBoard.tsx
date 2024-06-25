@@ -9,7 +9,7 @@ import { errorHandler } from '@/lib/utils';
 import { useBoard, useChangeBoardSaved } from '@/queries/board.queries';
 import BoardService from '@/services/board.service';
 import { useBoardStore } from '@/store/board.store';
-import { Star, Trash2 } from 'lucide-react';
+import { Heart, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -80,7 +80,7 @@ const SingleBoard = () => {
                   }}
                 >
                   <span className="sr-only">Save board</span>
-                  <Star stroke="gray" fill={board?.isSaved ? 'yellow' : 'transparent'} size={24} cursor="pointer" />
+                  <Heart stroke="red" fill={board?.isSaved ? 'red' : 'transparent'} size={24} cursor="pointer" />
                 </Button>
                 <AlertButton
                   title="Are you absolutely sure?"

@@ -1,6 +1,7 @@
 import SectionService from '@/services/section.service';
 import { SectionType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { UpdateSectionSchemaType } from './../validation/schemas';
 
 export const useSections = (boardId: string) => {
   return useQuery({
@@ -81,6 +82,46 @@ export const useDeleteSection = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['section', boardId] });
+      onSuccess?.();
+    },
+  });
+};
+
+export const useChangeSectionTitle = ({
+  boardId,
+  onError,
+  onSuccess,
+}: {
+  boardId: string;
+  onSuccess?: () => void;
+  onError?: (error: any) => void;
+}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['Change section title'],
+    mutationFn: ({ sectionId, newData }: { sectionId: string; newData: UpdateSectionSchemaType }) =>
+      SectionService.updateTitle(sectionId, newData),
+    //Optimistic update of data
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey: ['section', boardId] });
+
+      const previousSections = queryClient.getQueryData(['section', boardId]) as SectionType[];
+      const sectionsToUpdate = [...previousSections].map((el) =>
+        el.id === variables.sectionId ? { ...el, ...variables.newData } : el,
+      );
+      queryClient.setQueryData(['section', boardId], sectionsToUpdate);
+      return { previousSections };
+    },
+    onError: (error, _, context: any) => {
+      queryClient.setQueryData(['section', boardId], context.previousSections);
+      onError?.(error);
+    },
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(['section', boardId], (old: SectionType[]) => {
+        const newState = old.map((el) => (el.id === variables.sectionId ? { ...el, title: data.data?.title } : el));
+        return newState;
+      });
+      // queryClient.invalidateQueries({ queryKey: ['section', boardId] });
       onSuccess?.();
     },
   });

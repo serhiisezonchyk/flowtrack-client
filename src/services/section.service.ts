@@ -1,5 +1,6 @@
 import { $authHost } from '@/services';
 import { ResponseType, SectionType } from '@/types';
+import { UpdateSectionSchemaType } from '@/validation/schemas';
 
 export default class SectionService {
   static getSections = async (boardId: string) => {
@@ -19,6 +20,10 @@ export default class SectionService {
   };
   static deleteSection = async (sectionId: string) => {
     const data = await $authHost.delete<Omit<ResponseType, 'data'>>(`/section/${sectionId}`);
+    return data.data;
+  };
+  static updateTitle = async (sectionId: string, newData: UpdateSectionSchemaType) => {
+    const data = await $authHost.patch<ResponseType<SectionType>>(`/section/${sectionId}`, newData);
     return data.data;
   };
 }

@@ -2,13 +2,13 @@ import TaskService from '@/services/task.service';
 import { SectionType } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useCreateTask = ({ onSuccess, onError }: { onSuccess?: () => void; onError?: (error: any) => void }) => {
+export const useCreateTask = ({boardId, onSuccess, onError }: {boardId:string,onSuccess?: () => void; onError?: (error: any) => void }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Create task'],
     mutationFn: async (sectionId: string) => TaskService.createTask(sectionId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['section'] });
+      queryClient.invalidateQueries({ queryKey: ['section',boardId] });
       onSuccess?.();
     },
     onError: (error) => {
@@ -71,6 +71,12 @@ export const useTaskPositions = ({ onError }: { onError?: (error: any) => void }
     },
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['section', variables.boardId], data.data);
+      // queryClient.invalidateQueries({ queryKey: ['section', variables.boardId] });
     },
+
+    // onSettled: (data, _,variables) => {
+    //   // queryClient.setQueryData(['section', variables.boardId], data.data);
+    //   queryClient.invalidateQueries({ queryKey: ['section', variables.boardId] });
+    // },
   });
 };

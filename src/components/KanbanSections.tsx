@@ -8,20 +8,20 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
-  KeyboardSensor,
   MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { SortableContext, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import React, { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import KanbanColumn from './KanbanColumn';
 import SingleTask from './SingleTask';
+import KanbanColumn from './kanban-kolumn/KanbanColumn';
 import { Skeleton } from './ui/skeleton';
+import SmartMouseSensor from '@/lib/SmartPointerSensor';
 
 export const KanbanSectionsSkeleton: React.FC = ({}) => {
   return (
@@ -62,18 +62,15 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
     onError,
   });
   useEffect(() => {
-    setSections(structuredClone(data));
+    setSections([...data]);
   }, [data]);
   const sectionsPositions = useMemo(() => sections.map((col) => col.id), [sections]);
 
   const sensors = useSensors(
-    useSensor(MouseSensor, {
+    useSensor(SmartMouseSensor, {
       activationConstraint: {
         distance: 10,
       },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
@@ -244,7 +241,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
     }
     if (taskElement) {
       const currentPath = location.pathname;
-      console.log(currentPath)
+      console.log(currentPath);
       navigate(`${currentPath}/${taskElement}`);
     }
   };
@@ -255,7 +252,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
           <div className="flex flex-row gap-4 flex-wrap overflow-x-auto sm:flex-nowrap h-full">
             <SortableContext items={sectionsPositions}>
               {sections.map((section) => (
-                <KanbanColumn key={section.id} section={section} tasks={section.tasks} boardId={boardId} />
+                <KanbanColumn key={section.id} section={section} boardId={boardId} />
               ))}
             </SortableContext>
           </div>
@@ -265,7 +262,6 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
             <DragOverlay adjustScale={false}>
               {activeSection && (
                 <KanbanColumn
-                  tasks={activeSection.tasks}
                   className="bg-transaprent backdrop-blur-lg border-2 shadow-2xl"
                   section={activeSection}
                   boardId={boardId}

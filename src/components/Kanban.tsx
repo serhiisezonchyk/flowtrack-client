@@ -12,12 +12,8 @@ const Kanban: React.FC<KanbanProps> = () => {
   const sectionsCount = useBoardStore((state) => state.sectionsCount);
   const setSectionCount = useBoardStore((state) => state.setSectionsCount);
 
-  const {
-    data: sections,
-    isPending: isSectionsPending,
-    isError: isSectionsError,
-    error: sectionError,
-  } = useSections(boardId);
+  const { data, isPending: isSectionsPending, isError: isSectionsError, error: sectionError } = useSections(boardId);
+
   const handleSuccess = () => {
     toast.success('New section was added');
   };
@@ -32,10 +28,11 @@ const Kanban: React.FC<KanbanProps> = () => {
   });
 
   useEffect(() => {
-    if (sections) {
-      setSectionCount(sections.length);
+    if (data) {
+      setSectionCount(data.length);
     }
-  }, [sections]);
+  }, [data]);
+
   if (isSectionsError) {
     const errorData = errorHandler(sectionError);
     toast.error(errorData.error);
@@ -59,13 +56,9 @@ const Kanban: React.FC<KanbanProps> = () => {
         </div>
       </div>
       {/* sections */}
-      {isSectionsPending ? (
-        <KanbanSectionsSkeleton />
-      ) : (
-        sections && <KanbanSections data={sections} boardId={boardId} />
-      )}
+      {isSectionsPending ? <KanbanSectionsSkeleton /> : data && <KanbanSections data={structuredClone(data)} boardId={boardId} />}
     </div>
   );
 };
 
-export default React.memo(Kanban);
+export default Kanban;
