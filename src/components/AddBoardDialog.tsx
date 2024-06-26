@@ -22,13 +22,10 @@ interface AddBoardDialogProps {}
 const AddBoardDialog: React.FC<AddBoardDialogProps> = () => {
   const [open, setOpen] = useState(false);
   const handleSuccess = () => {
-    toast.success('New board was added');
     setOpen(false);
   };
 
-  const handleError = (error: any) => {
-    const handledError = errorHandler(error);
-    toast.error(handledError.error);
+  const handleError = () => {
     reset();
   };
 

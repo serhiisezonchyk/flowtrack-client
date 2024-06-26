@@ -1,6 +1,8 @@
+import { errorHandler } from '@/lib/utils';
 import SectionService from '@/services/section.service';
 import { SectionType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import { UpdateSectionSchemaType } from './../validation/schemas';
 
 export const useSections = (boardId: string) => {
@@ -11,27 +13,21 @@ export const useSections = (boardId: string) => {
   });
 };
 
-export const useCreateSection = ({
-  onSuccess,
-  onError,
-}: {
-  onSuccess?: () => void;
-  onError?: (error: any) => void;
-}) => {
+export const useCreateSection = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Create section'],
     mutationFn: async (boardId: string) => SectionService.createSection(boardId),
     onSuccess: (_, boardId) => {
       queryClient.invalidateQueries({ queryKey: ['section', boardId] });
-      onSuccess?.();
+      toast.success('New section was added');
     },
     onError: (error) => {
-      onError?.(error);
+      toast.error(errorHandler(error).error);
     },
   });
 };
-export const useSectionPositions = ({ onError }: { onError?: (error: any) => void }) => {
+export const useSectionPositions = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Change section positions'],
@@ -45,7 +41,7 @@ export const useSectionPositions = ({ onError }: { onError?: (error: any) => voi
     },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData(['section', variables.boardId], context.previousSection);
-      onError?.(error);
+      toast.error(errorHandler(error).error);
     },
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['section', variables.boardId], data.data);
@@ -87,15 +83,7 @@ export const useDeleteSection = ({
   });
 };
 
-export const useChangeSectionTitle = ({
-  boardId,
-  onError,
-  onSuccess,
-}: {
-  boardId: string;
-  onSuccess?: () => void;
-  onError?: (error: any) => void;
-}) => {
+export const useChangeSectionTitle = ({ boardId }: { boardId: string }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Change section title'],
@@ -114,7 +102,7 @@ export const useChangeSectionTitle = ({
     },
     onError: (error, _, context: any) => {
       queryClient.setQueryData(['section', boardId], context.previousSections);
-      onError?.(error);
+      toast.error(errorHandler(error).error);
     },
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['section', boardId], (old: SectionType[]) => {
@@ -122,7 +110,6 @@ export const useChangeSectionTitle = ({
         return newState;
       });
       // queryClient.invalidateQueries({ queryKey: ['section', boardId] });
-      onSuccess?.();
     },
   });
 };

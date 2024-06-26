@@ -16,21 +16,13 @@ const KanbanColumnHeader: React.FC<KanbanColumnHeaderProps> = ({ section, boardI
   const [isEditMode, setIsEditMode] = useState(false);
   const editedTitleRef = useRef(section.title);
 
-  const handleError = (e: any) => {
-    const error = errorHandler(e);
-    toast.error(error.error);
-  };
 
   const { mutate: createTask, isPending: isCreateTaskPending } = useCreateTask({
     boardId,
-    onSuccess: () => toast.success('Board was deleted'),
-    onError: handleError,
   });
 
   const { mutate: deleteSection } = useDeleteSection({
     boardId,
-    onSuccess: () => toast.success('Board was deleted'),
-    onError: handleError,
   });
 
   const { mutate: changeTitle } = useChangeSectionTitle({

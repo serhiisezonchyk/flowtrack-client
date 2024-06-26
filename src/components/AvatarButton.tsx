@@ -1,5 +1,4 @@
 import { AuthContext } from '@/context/AuthContext';
-import { ResponseError } from '@/data/errorTypes';
 import { isAxiosError } from 'axios';
 import { User } from 'lucide-react';
 import React, { useContext } from 'react';
@@ -13,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import { ResponseError } from '@/types';
 
 const AvatarButton: React.FC = () => {
   const navigate = useNavigate();

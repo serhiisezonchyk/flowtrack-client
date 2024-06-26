@@ -14,18 +14,7 @@ const Kanban: React.FC<KanbanProps> = () => {
 
   const { data, isPending: isSectionsPending, isError: isSectionsError, error: sectionError } = useSections(boardId);
 
-  const handleSuccess = () => {
-    toast.success('New section was added');
-  };
-
-  const handleError = (e: any) => {
-    const error = errorHandler(e);
-    toast.error(error.error);
-  };
-  const { mutate: createSection, isPending: isCreateSectionPending } = useCreateSection({
-    onSuccess: handleSuccess,
-    onError: handleError,
-  });
+  const { mutate: createSection, isPending: isCreateSectionPending } = useCreateSection();
 
   useEffect(() => {
     if (data) {
@@ -56,7 +45,11 @@ const Kanban: React.FC<KanbanProps> = () => {
         </div>
       </div>
       {/* sections */}
-      {isSectionsPending ? <KanbanSectionsSkeleton /> : data && <KanbanSections data={structuredClone(data)} boardId={boardId} />}
+      {isSectionsPending ? (
+        <KanbanSectionsSkeleton />
+      ) : (
+        data && <KanbanSections data={structuredClone(data)} boardId={boardId} />
+      )}
     </div>
   );
 };

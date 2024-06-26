@@ -2,7 +2,8 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import React, { useState } from 'react';
 
-import { Button } from './ui/button';
+import { UpdateBoardSchemaType } from '@/validation/schemas';
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogClose,
@@ -12,18 +13,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from '../ui/dialog';
+import { Skeleton } from '../ui/skeleton';
 
 interface EmojiPickerProps {
   icon: string;
-  onChange: (icon: string) => void;
+  onChange: (data: string) => void;
+  isBoardLoading: boolean;
 }
-const EmojiPicker: React.FC<EmojiPickerProps> = ({ icon, onChange }) => {
+const EmojiPicker: React.FC<EmojiPickerProps> = ({ icon, onChange, isBoardLoading }) => {
   const [selectedEmoji, setSelectedEmoji] = useState<string>(icon);
 
   const selectEmoji = (e: any) => {
     setSelectedEmoji(e.native);
   };
+  if (isBoardLoading) return <Skeleton className="size-9 rounded-full" />;
 
   return (
     <Dialog>

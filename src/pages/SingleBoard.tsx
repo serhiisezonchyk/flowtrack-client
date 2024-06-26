@@ -1,27 +1,31 @@
 import AlertButton from '@/components/AlertButton';
-import EmojiPicker from '@/components/EmojiPicker';
+import EmojiPicker from '@/components/board-info/EmojiPicker';
 import Input from '@/components/Input';
 import Kanban from '@/components/Kanban';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { errorHandler } from '@/lib/utils';
-import { useBoard, useChangeBoardSaved } from '@/queries/board.queries';
+import { useBoard, useChangeBoardSaved, useUpdateBoard } from '@/queries/board.queries';
 import BoardService from '@/services/board.service';
 import { useBoardStore } from '@/store/board.store';
+import debounce from 'lodash.debounce';
 import { Heart, Trash2 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const SingleBoard = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  if (!slug) return;
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [icon, setIcon] = useState('');
 
+  if (!slug) return;
+  const { data: board, isLoading: isBoardLoading } = useBoard(slug);
   const setBoardId = useBoardStore((state) => state.setCurrentBoardId);
 
-  const { data: board, isLoading: isBoardLoading } = useBoard(slug);
   const { mutate: changeIsSaved, isPending: isChangeIsSavedPending } = useChangeBoardSaved({
     slug,
   });
@@ -36,27 +40,56 @@ const SingleBoard = () => {
       toast.error(error.error);
     }
   }, []);
-  const [boardData, setBoardData] = useState({
-    icon: '',
-    title: '',
-    description: '',
-  });
+
   useEffect(() => {
     if (board) {
       setBoardId(board.id);
-      setBoardData({
-        icon: board.icon,
-        title: board.title,
-        description: board.description,
-      });
+
+      setTitle(board.title);
+      setDescription(board.description);
+      setIcon(board.icon);
     }
     return () => {
       setBoardId(null);
     };
   }, [board]);
-  const onIconChange = useCallback((newIcon: string) => {
-    setBoardData((prevData) => ({ ...prevData, icon: newIcon }));
-  }, []);
+
+  const { mutate: updateBoard } = useUpdateBoard(slug);
+  const onIconChange = (data: string) => {
+    setIcon(data);
+    updateBoard({ boardId: board?.id as string, newData: { icon: data } });
+  };
+
+  const debounceTitleChange = React.useRef(
+    debounce((data: string, boardId: string) => {
+      updateBoard({ boardId, newData: { title: data } });
+    }, 1000),
+  ).current;
+
+  const debounceDescriptionChange = React.useRef(
+    debounce((data: string, boardId: string) => {
+      updateBoard({ boardId, newData: { description: data } });
+    }, 1000),
+  ).current;
+
+  const onTitleChange = (data: string) => {
+    setTitle(data);
+    debounceTitleChange(data, board?.id as string);
+  };
+
+  useEffect(() => {
+    return () => {
+      debounceTitleChange.cancel();
+      debounceDescriptionChange.cancel();
+    };
+  }, [debounceTitleChange, debounceDescriptionChange]);
+
+  const onDescriptionChange = (data: string) => {
+    setDescription(data);
+    debounceDescriptionChange(data, board?.id as string);
+  };
+  if (!isBoardLoading && !board) return <Navigate to={'/my-boards'} />;
+
   return (
     <div>
       {/* Main info */}
@@ -65,11 +98,7 @@ const SingleBoard = () => {
           <div className="space-y-4">
             {/* Actions/emojis */}
             <div className="w-full flex flex-row justify-between items-center">
-              {!isBoardLoading ? (
-                <EmojiPicker icon={boardData.icon} onChange={onIconChange} />
-              ) : (
-                <Skeleton className="size-9 rounded-full" />
-              )}
+              <EmojiPicker icon={icon} onChange={onIconChange} isBoardLoading={isBoardLoading} />
               <div className="flex flex-row gap-8">
                 <Button
                   variant={'ghost'}
@@ -100,14 +129,9 @@ const SingleBoard = () => {
               <Skeleton className="border-none mb-0 text-2xl px-0 w-full h-12" />
             ) : (
               <Input
-                value={boardData.title}
+                value={title}
                 className="border-none mb-0 text-2xl px-0"
-                onChange={(e) =>
-                  setBoardData((prevData) => ({
-                    ...prevData,
-                    title: e.target.value,
-                  }))
-                }
+                onChange={(e) => onTitleChange(e.target.value)}
               />
             )}
 
@@ -117,14 +141,9 @@ const SingleBoard = () => {
             ) : (
               <Textarea
                 className="border-none resize-none px-0"
-                defaultValue={boardData.description}
+                defaultValue={description}
                 disabled={isBoardLoading}
-                onChange={(e) =>
-                  setBoardData((prevData) => ({
-                    ...prevData,
-                    description: e.target.value,
-                  }))
-                }
+                onChange={(e) => onDescriptionChange(e.target.value)}
               />
             )}
           </div>

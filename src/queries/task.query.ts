@@ -1,30 +1,24 @@
+import { errorHandler } from '@/lib/utils';
 import TaskService from '@/services/task.service';
 import { SectionType } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
-export const useCreateTask = ({boardId, onSuccess, onError }: {boardId:string,onSuccess?: () => void; onError?: (error: any) => void }) => {
+export const useCreateTask = ({ boardId }: { boardId: string }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Create task'],
     mutationFn: async (sectionId: string) => TaskService.createTask(sectionId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['section',boardId] });
-      onSuccess?.();
+      queryClient.invalidateQueries({ queryKey: ['section', boardId] });
+      toast.success('Task was added');
     },
     onError: (error) => {
-      onError?.(error);
+      toast.error(errorHandler(error).error);
     },
   });
 };
-export const useDeleteTask = ({
-  boardId,
-  onSuccess,
-  onError,
-}: {
-  boardId: string;
-  onSuccess?: () => void;
-  onError?: (error: any) => void;
-}) => {
+export const useDeleteTask = ({ boardId }: { boardId: string}) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Delete task'],
@@ -44,16 +38,16 @@ export const useDeleteTask = ({
     },
     onError: (error, _, context) => {
       queryClient.setQueryData(['section', boardId], context?.previousSections);
-      onError?.(error);
+      toast.error(errorHandler(error).error);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['section', boardId] });
-      onSuccess?.();
+      toast.success('Task was deleted');
     },
   });
 };
 
-export const useTaskPositions = ({ onError }: { onError?: (error: any) => void }) => {
+export const useTaskPositions = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Change section positions'],
@@ -61,13 +55,13 @@ export const useTaskPositions = ({ onError }: { onError?: (error: any) => void }
       TaskService.changeTaskPositions(boardId, newData),
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: ['section', variables.boardId] });
-      const previousSection =  queryClient.getQueryData(['section', variables.boardId]);
+      const previousSection = queryClient.getQueryData(['section', variables.boardId]);
       queryClient.setQueryData(['section', variables.boardId], variables.newData);
       return { previousSection };
     },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData(['section', variables.boardId], context.previousSection);
-      onError?.(error);
+      toast.error(errorHandler(error).error);
     },
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['section', variables.boardId], data.data);

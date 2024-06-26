@@ -1,3 +1,14 @@
+export interface ResponseError {
+  error: string;
+  details?: string;
+}
+
+export interface ValidationError {
+  error: string;
+  details?: { path: string; message: string }[];
+}
+
+
 export interface User {
   id: string;
   login: string;
@@ -21,8 +32,6 @@ export interface SectionType {
   id: string;
   title: string;
   position: number;
-  // Uncomment and define this field if needed
-  // board: Board; // Reference to the Board type
   tasks: TaskType[];
 }
 export interface TaskType {
@@ -30,8 +39,7 @@ export interface TaskType {
   title: string;
   content: string;
   position: number;
-  // Uncomment and define this field if needed
-  sectionId: string; // Reference to the sectionId
+  sectionId: string; 
 }
 
 export interface ResponseType<T = undefined> {

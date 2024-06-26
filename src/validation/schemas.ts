@@ -56,3 +56,13 @@ export const updateSectionSchema = z.object({
     .min(4, { message: 'Title is required and cannot be empty or whitespace. Minimum length - 4s.' }),
 });
 export type UpdateSectionSchemaType = z.infer<typeof updateSectionSchema>;
+
+export const updateBoardSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .optional(),
+  description: z.string().optional(),
+  icon: z.string().optional(),
+});
+export type UpdateBoardSchemaType = z.infer<typeof updateBoardSchema>;

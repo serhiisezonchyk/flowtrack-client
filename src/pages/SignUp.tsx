@@ -1,5 +1,4 @@
 import { AuthContext } from '@/context/AuthContext';
-import { ResponseError } from '@/data/errorTypes';
 import AuthService from '@/services/auth.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
@@ -9,6 +8,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Input from '../components/Input';
 import { SignUpSchemaType, signUpSchema } from '../validation/schemas';
+import { ResponseError } from '@/types';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();

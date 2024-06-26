@@ -8,7 +8,6 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
-  MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
@@ -44,22 +43,14 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
   const [activeSection, setActiveSection] = useState<SectionType | null>(null);
   const [activeTask, setActiveTask] = useState<TaskType | null>(null);
   const [sections, setSections] = useState<SectionType[]>([]);
-  const onError = (e: any) => {
-    const error = errorHandler(e);
-    toast.error(error.error);
-  };
-  const { mutate: swapSectionsPosition } = useSectionPositions({
-    onError,
-  });
-  const { mutate: swapTaskPositions } = useTaskPositions({
-    onError,
-  });
+
+  const { mutate: swapSectionsPosition } = useSectionPositions();
+  const { mutate: swapTaskPositions } = useTaskPositions();
   const { mutate: deleteTask } = useDeleteTask({
     boardId,
     onSuccess: () => {
       toast.success('Task was deleted successfully');
     },
-    onError,
   });
   useEffect(() => {
     setSections([...data]);
@@ -241,7 +232,6 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
     }
     if (taskElement) {
       const currentPath = location.pathname;
-      console.log(currentPath);
       navigate(`${currentPath}/${taskElement}`);
     }
   };
