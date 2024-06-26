@@ -1,8 +1,16 @@
 import { errorHandler } from '@/lib/utils';
 import TaskService from '@/services/task.service';
 import { SectionType } from '@/types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+
+export const useTask = (taskId: string) => {
+  return useQuery({
+    queryKey: ['task', taskId],
+    queryFn: () => TaskService.getTask(taskId),
+    enabled: !!taskId,
+  });
+};
 
 export const useCreateTask = ({ boardId }: { boardId: string }) => {
   const queryClient = useQueryClient();
@@ -18,7 +26,7 @@ export const useCreateTask = ({ boardId }: { boardId: string }) => {
     },
   });
 };
-export const useDeleteTask = ({ boardId }: { boardId: string}) => {
+export const useDeleteTask = ({ boardId }: { boardId: string }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['Delete task'],

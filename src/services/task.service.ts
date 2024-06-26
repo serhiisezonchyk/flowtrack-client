@@ -2,6 +2,10 @@ import { $authHost } from '@/services';
 import { ResponseType, SectionType, TaskType } from '@/types';
 
 export default class TaskService {
+  static getTask = async (taskId: string) => {
+    const { data } = await $authHost.get<Omit<ResponseType<TaskType>, 'message'>>(`/task/${taskId}`);
+    return data.data;
+  };
   static createTask = async (sectionId: string) => {
     const { data } = await $authHost.post<Omit<ResponseType<TaskType>, 'message'>>(`/task/${sectionId}`);
     return data.data;
