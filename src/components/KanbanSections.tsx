@@ -48,9 +48,6 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
   const { mutate: swapTaskPositions } = useTaskPositions();
   const { mutate: deleteTask } = useDeleteTask({
     boardId,
-    onSuccess: () => {
-      toast.success('Task was deleted successfully');
-    },
   });
   useEffect(() => {
     setSections([...data]);

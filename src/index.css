@@ -88,3 +88,19 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-blue-200 rounded-xl;
 }
+
+.w-md-editor-toolbar {
+ @apply: flex flex-col md:flex-row;
+ ul{
+  button{
+    width:30px;
+    height: 30px;
+    &:hover{
+      color: gray;
+    }
+    svg{
+      margin: 0 auto;
+    }
+  }
+ }
+}

@@ -1,5 +1,6 @@
 import { $authHost } from '@/services';
 import { ResponseType, SectionType, TaskType } from '@/types';
+import { TaskUpdateSchemaType } from '@/validation/schemas';
 
 export default class TaskService {
   static getTask = async (taskId: string) => {
@@ -21,5 +22,9 @@ export default class TaskService {
       newData,
     );
     return data.data;
+  };
+  static updateTask = async (taskId: string, newData: TaskUpdateSchemaType) => {
+    const data = await $authHost.put<ResponseType<TaskType>>(`/task/${taskId}`, newData);
+    return data.data.data;
   };
 }

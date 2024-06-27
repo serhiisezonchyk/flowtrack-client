@@ -1,6 +1,7 @@
 import { errorHandler } from '@/lib/utils';
 import TaskService from '@/services/task.service';
 import { SectionType } from '@/types';
+import { TaskUpdateSchemaType } from '@/validation/schemas';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
@@ -80,5 +81,21 @@ export const useTaskPositions = () => {
     //   // queryClient.setQueryData(['section', variables.boardId], data.data);
     //   queryClient.invalidateQueries({ queryKey: ['section', variables.boardId] });
     // },
+  });
+};
+
+export const useTaskUpdate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['Update task'],
+    mutationFn: async ({ taskId, newData }: { taskId: string; newData: TaskUpdateSchemaType }) =>
+      TaskService.updateTask(taskId, newData),
+    onError: (error) => {
+      toast.error(errorHandler(error).error);
+    },
+    onSettled: (_, __, vars) => {
+      queryClient.invalidateQueries({ queryKey: ['task', vars.taskId] });
+    },
   });
 };

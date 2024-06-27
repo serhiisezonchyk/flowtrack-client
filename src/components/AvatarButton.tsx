@@ -1,18 +1,13 @@
 import { AuthContext } from '@/context/AuthContext';
+import { ResponseError } from '@/types';
 import { isAxiosError } from 'axios';
 import { User } from 'lucide-react';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ModeToggle } from './ModeToggle';
 import { Button } from './ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { ResponseError } from '@/types';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 const AvatarButton: React.FC = () => {
   const navigate = useNavigate();
@@ -39,8 +34,7 @@ const AvatarButton: React.FC = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => console.log('ss')}>Settings</DropdownMenuItem>
-        <DropdownMenuSeparator />
+        <ModeToggle />
         <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

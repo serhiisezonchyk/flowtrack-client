@@ -8,7 +8,6 @@ export interface ValidationError {
   details?: { path: string; message: string }[];
 }
 
-
 export interface User {
   id: string;
   login: string;
@@ -39,7 +38,9 @@ export interface TaskType {
   title: string;
   content: string;
   position: number;
-  sectionId: string; 
+  sectionId: string;
+  createdAt: Date;
+  deadline: Date;
 }
 
 export interface ResponseType<T = undefined> {
