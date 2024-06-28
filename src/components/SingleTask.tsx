@@ -22,7 +22,7 @@ const SingleTask: React.FC<SingleTaskProps> = ({ task }) => {
   };
 
   if (isDragging)
-    return <div ref={setNodeRef} className="m-2 px-4 py-2 bg-slate-300/40 rounded-md h-10 backdrop-blur-lg"></div>;
+    return <div ref={setNodeRef} className="m-2 px-4 py-2 bg-background/40 rounded-md h-10 backdrop-blur-lg"></div>;
 
   return (
     <div
@@ -31,10 +31,10 @@ const SingleTask: React.FC<SingleTaskProps> = ({ task }) => {
       {...attributes}
       {...listeners}
       data-task-id={task.id}
-      className="m-2 px-4 py-2 bg-slate-300/40 rounded-md cursor-pointer hover:bg-slate-300/70 active:bg-slate-300/70 duration-300 transition-all ease-out h-10 relative group overflow-hidden"
+      className="m-2 px-4 py-2 bg-background/40 rounded-md cursor-pointer hover:bg-background/70 active:bg-background/70 duration-300 transition-all ease-out h-10 relative group overflow-hidden"
     >
       {task.title}
-      <Button variant={'ghost'} size={'icon'} className="absolute right-0 top-0 rounded-l-none hover:bg-slate-300 active:bg-slate-300" data-delete-task>
+      <Button variant={'ghost'} size={'icon'} className="absolute right-0 top-0 rounded-l-none hover:bg-background active:bg-background" data-delete-task>
         <Minus size={20} className="text-gray-600" />
       </Button>
     </div>

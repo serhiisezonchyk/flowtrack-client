@@ -55,7 +55,7 @@ const TaskView: React.FC<TaskViewProps> = ({ task, onEdit, slug }) => {
       </div>
 
       <div className="h-full mt-2 prose">
-        <MDEditor.Markdown source={task.content} />
+        <MDEditor.Markdown source={task.content} className="bg-background text-foreground" />
       </div>
     </>
   );
@@ -138,9 +138,11 @@ const TaskEdit: React.FC<TaskEditProps> = ({ task, onCancel, onSave }) => {
         </div>
       </div>
 
-      <div className="h-full mt-2 prose">
+      <div className="h-full mt-2 prose bg-background">
         <MDEditor
           value={data.content}
+          className="bg-background text-foreground"
+          height={500}
           preview="edit"
           onChange={(_, state) => handleInputChange('content', state?.target.value || '')}
         />

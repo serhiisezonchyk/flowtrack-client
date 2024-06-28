@@ -1,3 +1,6 @@
+import gsap from 'gsap';
+import ScrollToPlugin from 'gsap/ScrollToPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { lazy, useContext, useEffect } from 'react';
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -13,6 +16,7 @@ import SingleTaskPage from './pages/SingleTaskPage';
 
 const SignIn = lazy(() => import('./pages/SignIn'));
 const SignUp = lazy(() => import('./pages/SignUp'));
+
 function App() {
   const { checkAuth } = useContext(AuthContext);
   const router = createBrowserRouter([
@@ -76,7 +80,14 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <ToastContainer position="bottom-right" theme="light" autoClose={3000} />
+      <ToastContainer
+        position="bottom-right"
+        theme="auto"
+        className="bg-background text-foreground"
+        draggable={true}
+        pauseOnFocusLoss={false}
+        autoClose={2000}
+      />
     </>
   );
 }

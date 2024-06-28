@@ -68,7 +68,7 @@ const KanbanColumnHeader: React.FC<KanbanColumnHeaderProps> = ({ section, boardI
       <div className="relative">
         {!isEditMode && (
           <div
-            className="absolute -left-8 -top-8 rounded-full bg-white p-2 transition-all duration-300 ease-out text-gray-400 hover:text-gray-500 active:text-gray-500"
+            className="absolute -left-8 -top-8 rounded-full bg-background p-2 transition-all duration-300 ease-out text-gray-400 hover:text-gray-500 active:text-gray-500"
             onClick={() => setIsEditMode(true)}
           >
             <Pen size={18} />
@@ -80,7 +80,7 @@ const KanbanColumnHeader: React.FC<KanbanColumnHeaderProps> = ({ section, boardI
         ) : (
           <input
             autoFocus
-            className="bg-slate-100 border-b-[1px] border-b-gray-200 outline-none"
+            className="bg-accent border-b-[1px] border-b-foreground outline-none"
             defaultValue={section.title}
             onChange={(e) => {
               editedTitleRef.current = e.target.value;

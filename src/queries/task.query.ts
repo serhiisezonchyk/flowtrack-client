@@ -10,6 +10,7 @@ export const useTask = (taskId: string) => {
     queryKey: ['task', taskId],
     queryFn: () => TaskService.getTask(taskId),
     enabled: !!taskId,
+    refetchOnWindowFocus: false,
   });
 };
 

@@ -47,7 +47,7 @@ const AddBoardDialog: React.FC<AddBoardDialogProps> = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="p-2">
-          <PlusSquare size={24} fill="white" />
+          <PlusSquare size={24} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

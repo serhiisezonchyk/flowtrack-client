@@ -249,7 +249,7 @@ const KanbanSections: React.FC<KanbanSectionsProps> = ({ data, boardId }) => {
             <DragOverlay adjustScale={false}>
               {activeSection && (
                 <KanbanColumn
-                  className="bg-transaprent backdrop-blur-lg border-2 shadow-2xl"
+                  className="bg-accent/10 backdrop-blur-lg border-2 shadow-2xl"
                   section={activeSection}
                   boardId={boardId}
                 />

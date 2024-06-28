@@ -1,5 +1,7 @@
+import { Button, buttonVariants } from '@/components/ui/button';
 import { AuthContext } from '@/context/AuthContext';
 import AuthService from '@/services/auth.service';
+import { ResponseError } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
 import React, { useContext } from 'react';
@@ -8,24 +10,29 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Input from '../components/Input';
 import { SignUpSchemaType, signUpSchema } from '../validation/schemas';
-import { ResponseError } from '@/types';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const { isAuth } = useContext(AuthContext);
 
   const onSubmit = async (props: SignUpSchemaType) => {
+    const id = toast.loading('Please wait...');
     try {
       const data = await AuthService.signUp(props);
       if (data) {
-        toast.success('User created successfuly');
+        toast.update(id, { render: 'User created successfuly', type: 'success', isLoading: false, autoClose: 2000 });
         navigate('/sign-in');
       }
     } catch (error) {
       if (isAxiosError<ResponseError>(error)) {
-        toast.error(error.response?.data.error);
+        toast.update(id, { render: `${error.response?.data.error}`, type: 'error', isLoading: false, autoClose: 2000 });
       } else {
-        toast.error('Something went wrong! Try later.');
+        toast.update(id, {
+          render: 'Something went wrong! Try later.',
+          type: 'error',
+          isLoading: false,
+          autoClose: 2000,
+        });
       }
     }
   };
@@ -42,43 +49,56 @@ const SignUp: React.FC = () => {
   if (isAuth) return <Navigate to={'/'} replace={true} />;
   return (
     <div className="h-full flex justify-center items-center">
-      <div className="w-full sm:w-[80%] md:w-[320px] space-y-2 text-right">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col px-2">
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
+          <p className="text-sm text-muted-foreground">Enter your email below to create your account</p>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col px-2 sm:px-0">
           <Input
             {...register('login')}
             placeholder="Login"
-            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
+            id="login"
             label="Login"
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect="off"
             errorMessage={errors.login?.message}
           />
           <Input
             {...register('password')}
             placeholder="Password"
+            id="password"
             type="password"
-            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
             label="Password"
             errorMessage={errors.password?.message}
           />
           <Input
             {...register('checkPassword')}
             placeholder="Repeat password"
+            id="checkPassword"
             type="password"
-            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
             label="Repeat password"
             errorMessage={errors.password?.message}
           />
-          <button
-            className="mt-8 py-4 px-6 rounded-sm bg-slate-500/10 duration-300 transition-all ease-out  hover:bg-slate-500/15 active:bg-slate-500/15"
-            type="submit"
-          >
+          <Button type="submit" className="mt-4" variant={'secondary'}>
             Sign Up
-          </button>
-        </form>
-        <div className="mr-2">
-          <Link to={'/sign-in'} className="text-blue-500 underline hover:text-blue-600 active:bg-slate-500/15">
+          </Button>
+          <Link to={'/sign-in'} className={buttonVariants({ variant: 'link' })}>
             Already have an account?
           </Link>
-        </div>
+          <p className="px-8 text-center text-sm text-muted-foreground">
+            By clicking Sign Up, you agree to our{' '}
+            <Link to="#" className="underline underline-offset-4 hover:text-primary">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link to={'#'} className="underline underline-offset-4 hover:text-primary">
+              Privacy Policy
+            </Link>
+            .
+          </p>
+        </form>
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ section, className, boardId
         ref={setNodeRef}
         style={style}
         className={cn(
-          'w-full sm:min-w-[350px] sm:w-[350px] bg-slate-100 rounded-md opacity-50 min-h-[170px]',
+          'w-full sm:min-w-[350px] sm:w-[350px] bg-accent rounded-md opacity-50 min-h-[170px]',
           className,
         )}
       ></div>
@@ -43,12 +43,12 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ section, className, boardId
       style={style}
       {...attributes}
       className={cn(
-        'w-full sm:min-w-[350px] sm:w-[350px] bg-slate-100 rounded-md min-h-[170px] touch-manipulation',
+        'w-full sm:min-w-[350px] sm:w-[350px] bg-accent rounded-md min-h-[170px] touch-manipulation',
         className,
       )}
     >
       {/* Header */}
-      <div {...listeners} className={cn(`m-2 px-4 py-2 border-b-2 flex flex-row justify-between items-center`)}>
+      <div {...listeners} className={cn(`m-2 px-4 py-2 border-b-2 border-b-border dark:border-b-background flex flex-row justify-between items-center`)}>
         <KanbanColumnHeader section={section} boardId={boardId} />
       </div>
 

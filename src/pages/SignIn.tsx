@@ -1,4 +1,6 @@
+import { Button, buttonVariants } from '@/components/ui/button';
 import { AuthContext } from '@/context/AuthContext';
+import { ResponseError } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
 import React, { useContext } from 'react';
@@ -7,21 +9,26 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Input from '../components/Input';
 import { SignInSchemaType, signInSchema } from '../validation/schemas';
-import { ResponseError } from '@/types';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
   const { isAuth, login } = useContext(AuthContext);
   const onSubmit = async (props: SignInSchemaType) => {
+    const id = toast.loading('Please wait...');
     try {
       await login(props);
-      toast.success('Login succeed');
+      toast.update(id, { render: 'Login succeed', type: 'success', isLoading: false, autoClose: 2000 });
       navigate('/my-boards');
     } catch (error) {
       if (isAxiosError<ResponseError>(error)) {
-        toast.error(error.response?.data.error);
+        toast.update(id, { render: `${error.response?.data.error}`, type: 'error', isLoading: false, autoClose: 2000 });
       } else {
-        toast.error('Something went wrong! Try later.');
+        toast.update(id, {
+          render: 'Something went wrong! Try later.',
+          type: 'error',
+          isLoading: false,
+          autoClose: 2000,
+        });
       }
     }
   };
@@ -38,40 +45,42 @@ const SignIn: React.FC = () => {
 
   return (
     <div className="h-full flex justify-center items-center">
-      <div className="w-full sm:w-[80%] md:w-[320px] space-y-2">
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
+          <p className="text-sm text-muted-foreground">Enter your email and password below to login your account</p>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col px-2 sm:px-0">
           <Input
             {...register('login')}
             placeholder="Login"
-            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
             label="Login"
+            id="login"
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect="off"
             errorMessage={errors.login?.message}
           />
           <Input
             {...register('password')}
             placeholder="Password"
             type="password"
-            className="border-2 border-transparent border-b-2 border-b-purple-100 focus:border-b-purple-300"
+            id="password"
+            autoCorrect="off"
             label="Password"
             errorMessage={errors.password?.message}
           />
-          <button
-            className="mt-8 py-4 px-6 rounded-sm bg-slate-500/10 duration-300 transition-all ease-out hover:bg-slate-500/15 active:bg-slate-500/15"
-            type="submit"
-          >
+          <Button type="submit" className="mt-6" variant={'secondary'}>
             Sign In
-          </button>
+          </Button>
         </form>
         <div className="text-center flex flex-col gap-2">
           <div className="flex items-center justify-center">
             <div className="border-t border-gray-300 flex-grow mr-3"></div>
-            <div>or</div>
+            <div>Or</div>
             <div className="border-t border-gray-300 flex-grow ml-3"></div>
           </div>
-          <Link
-            to={'/sign-up'}
-            className="py-4 px-6 rounded-sm bg-purple-500/10 duration-300 transition-all ease-out hover:bg-purple-500/15 active:bg-slate-500/15"
-          >
+          <Link to={'/sign-up'} className={buttonVariants({ variant: 'outline' })}>
             Create new account...
           </Link>
         </div>

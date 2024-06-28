@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 const Layout: React.FC = () => {
   return (
     <>
-      <header className="h-16 bg-gray-300/20 fixed top-0 w-full content-center">
+      <header className="h-16 bg-background shadow-md fixed top-0 w-full content-center">
         <div className="container">
           <Navbar />
         </div>
