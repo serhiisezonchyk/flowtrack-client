@@ -38,7 +38,7 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const { register, handleSubmit, formState, control } = useForm<SignUpSchemaType>({
+  const { register, handleSubmit, formState } = useForm<SignUpSchemaType>({
     defaultValues: {
       login: '',
       password: '',

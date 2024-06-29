@@ -2,7 +2,7 @@ const inMemoryJWTService = () => {
   let inMemoryJWT: string | null = null;
   const getToken = () => inMemoryJWT;
 
-  const setToken = (token: string, tokenExpiration: number) => {
+  const setToken = (token: string) => {
     inMemoryJWT = token;
   };
   const removeToken = () => {

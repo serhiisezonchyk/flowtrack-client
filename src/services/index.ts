@@ -34,7 +34,7 @@ $authHost.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const resp = await AuthService.refresh();
-        inMemoryJWT.setToken(resp.accessToken, resp.accessTokenExpiration);
+        inMemoryJWT.setToken(resp.accessToken);
       } catch (error) {
         toast.error('Session expired.');
         return Promise.reject(error);

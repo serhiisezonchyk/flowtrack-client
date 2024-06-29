@@ -1,11 +1,10 @@
-import { cn, errorHandler } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { useCreateBoard } from '@/queries/board.queries';
 import { CreateBoardSchemaType, createBoardSchema } from '@/validation/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PlusSquare } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import { Button } from './ui/button';
 import {
   Dialog,

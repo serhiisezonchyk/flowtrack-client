@@ -1,4 +1,3 @@
-import { errorHandler } from '@/lib/utils';
 import { useSectionPositions } from '@/queries/section.queries';
 import { useDeleteTask, useTaskPositions } from '@/queries/task.query';
 import { SectionType, TaskType } from '@/types';
@@ -16,7 +15,6 @@ import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import React, { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import SingleTask from './SingleTask';
 import KanbanColumn from './kanban-kolumn/KanbanColumn';
 import { Skeleton } from './ui/skeleton';

@@ -1,10 +1,8 @@
-import { errorHandler } from '@/lib/utils';
 import { useChangeSectionTitle, useDeleteSection } from '@/queries/section.queries';
 import { useCreateTask } from '@/queries/task.query';
 import { SectionType } from '@/types';
 import { Pen, Plus, Trash, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 import AlertButton from '../AlertButton';
 import { Button } from '../ui/button';
 
@@ -15,7 +13,6 @@ interface KanbanColumnHeaderProps {
 const KanbanColumnHeader: React.FC<KanbanColumnHeaderProps> = ({ section, boardId }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const editedTitleRef = useRef(section.title);
-
 
   const { mutate: createTask, isPending: isCreateTaskPending } = useCreateTask({
     boardId,

@@ -1,8 +1,6 @@
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import React, { useState } from 'react';
-
-import { UpdateBoardSchemaType } from '@/validation/schemas';
 import { Button } from '../ui/button';
 import {
   Dialog,

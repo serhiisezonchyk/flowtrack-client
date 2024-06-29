@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { SectionType } from '@/types';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import SingleTask from '../SingleTask';
 import KanbanColumnHeader from './KanbanColumnHeader';
 interface KanbanColumnProps {

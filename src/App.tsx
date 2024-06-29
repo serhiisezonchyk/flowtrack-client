@@ -1,6 +1,3 @@
-import gsap from 'gsap';
-import ScrollToPlugin from 'gsap/ScrollToPlugin';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { lazy, useContext, useEffect } from 'react';
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';

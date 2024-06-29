@@ -27,7 +27,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     setIsAuthInProgress(true);
     try {
       const resp = await AuthService.signIn({ login, password });
-      inMemoryJWT.setToken(resp.accessToken, resp.accessTokenExpiration);
+      inMemoryJWT.setToken(resp.accessToken);
       setIsAuth(resp.data);
     } finally {
       setIsAuthInProgress(false);
@@ -38,7 +38,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     setIsAuthInProgress(true);
     try {
       const resp = await AuthService.googleSignIn({ credential });
-      inMemoryJWT.setToken(resp.accessToken, resp.accessTokenExpiration);
+      inMemoryJWT.setToken(resp.accessToken);
       setIsAuth(resp.data);
     } finally {
       setIsAuthInProgress(false);
@@ -48,7 +48,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     setIsAuthInProgress(true);
     try {
       const resp = await AuthService.refresh();
-      inMemoryJWT.setToken(resp.accessToken, resp.accessTokenExpiration);
+      inMemoryJWT.setToken(resp.accessToken);
       setIsAuth(resp.data);
     } catch (error) {
       setIsAuth(null);
