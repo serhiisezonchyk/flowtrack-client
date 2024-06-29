@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { AuthContext } from '@/context/AuthContext';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -34,6 +35,12 @@ const GreetPage: React.FC = () => {
 
   return (
     <>
+      <SEO
+        title="FlowTrack"
+        description="Welcome to FlowTrack! We are glad to have you here."
+        name="Greet Page"
+        type="page"
+      />
       <section className="bg-accent py-12">
         <div className="container mx-auto px-4 text-center">
           <h1 id="header" className="text-4xl font-bold text-primary">

@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { AuthContext } from '@/context/AuthContext';
 import { ResponseError } from '@/types';
@@ -60,6 +61,12 @@ const SignIn: React.FC = () => {
 
   return (
     <div className="h-full flex justify-center items-center">
+      <SEO
+        title="Sign In | FlowTrack"
+        description="Sign in to access your account and enjoy our services."
+        name="Sign In"
+        type="form"
+      />
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
@@ -90,7 +97,7 @@ const SignIn: React.FC = () => {
               Sign In
             </Button>
             <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_CLIENT_ID}>
-              <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} type='icon'/>
+              <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} type="icon" />
             </GoogleOAuthProvider>
           </div>
         </form>

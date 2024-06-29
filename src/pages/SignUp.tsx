@@ -1,3 +1,4 @@
+import SEO from '@/components/SEO';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { AuthContext } from '@/context/AuthContext';
 import AuthService from '@/services/auth.service';
@@ -49,6 +50,12 @@ const SignUp: React.FC = () => {
   if (isAuth) return <Navigate to={'/'} replace={true} />;
   return (
     <div className="h-full flex justify-center items-center">
+      <SEO
+        title="Sign Up | FlowTrack"
+        description="Create a new account to get started with our amazing services."
+        name="Sign Up"
+        type="form"
+      />
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
