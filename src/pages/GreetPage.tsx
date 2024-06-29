@@ -79,7 +79,7 @@ const GreetPage: React.FC = () => {
 
       <section className="bg-accent py-12">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-semibold text-gray-800">Features</h2>
+          <h2 className="text-3xl font-semibold text-muted-foreground">Features</h2>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 bg-card rounded-lg shadow-md">
               <h3 className="text-xl font-semibold text-primary">Easy to Use</h3>
@@ -117,7 +117,7 @@ const GreetPage: React.FC = () => {
       <section className="bg-accent py-12">
         <div className="container mx-auto px-4 text-center">
           <div className="flex flex-col">
-            <h2 className="text-3xl font-semibold text-gray-800">Task Example</h2>
+            <h2 className="text-3xl font-semibold text-muted-foreground">Task Example</h2>
             <p className="mt-4 text-muted-foreground">
               You can write task descriptions with tables, lists, and more using Markdown.
             </p>
