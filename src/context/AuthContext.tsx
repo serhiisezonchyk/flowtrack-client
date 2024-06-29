@@ -6,6 +6,7 @@ interface AuthContextState {
   isAuth: null | User;
   isAuthInProgress: boolean;
   login: ({ login, password }: { login: string; password: string }) => Promise<void>;
+  googleSignIn: (credential: string) => Promise<void>;
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -13,6 +14,7 @@ export const AuthContext = createContext<AuthContextState>({
   isAuth: null,
   isAuthInProgress: false,
   login: async () => {},
+  googleSignIn: async () => {},
   checkAuth: async () => {},
   logout: async () => {},
 });
@@ -32,6 +34,16 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     }
   };
 
+  const googleSignIn = async (credential: string) => {
+    setIsAuthInProgress(true);
+    try {
+      const resp = await AuthService.googleSignIn({ credential });
+      inMemoryJWT.setToken(resp.accessToken, resp.accessTokenExpiration);
+      setIsAuth(resp.data);
+    } finally {
+      setIsAuthInProgress(false);
+    }
+  };
   const checkAuth = async () => {
     setIsAuthInProgress(true);
     try {
@@ -74,7 +86,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuth, isAuthInProgress, login, checkAuth, logout }}>
+    <AuthContext.Provider value={{ isAuth, isAuthInProgress, login, checkAuth, logout, googleSignIn }}>
       {children}
     </AuthContext.Provider>
   );

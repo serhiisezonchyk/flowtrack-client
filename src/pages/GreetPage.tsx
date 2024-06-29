@@ -38,7 +38,7 @@ const GreetPage: React.FC = () => {
         <div className="container mx-auto px-4 text-center">
           <h1 id="header" className="text-4xl font-bold text-primary">
             Welcome to{' '}
-            <span id="headerLogo" className="text-black font-playwrite opacity-0">
+            <span id="headerLogo" className="text-black dark:text-white font-playwrite opacity-0">
               FlowTrack
             </span>
           </h1>

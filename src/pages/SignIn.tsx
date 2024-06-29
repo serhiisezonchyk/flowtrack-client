@@ -2,6 +2,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { AuthContext } from '@/context/AuthContext';
 import { ResponseError } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { isAxiosError } from 'axios';
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,7 +13,7 @@ import { SignInSchemaType, signInSchema } from '../validation/schemas';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuth, login } = useContext(AuthContext);
+  const { isAuth, login, googleSignIn } = useContext(AuthContext);
   const onSubmit = async (props: SignInSchemaType) => {
     const id = toast.loading('Please wait...');
     try {
@@ -32,8 +33,22 @@ const SignIn: React.FC = () => {
       }
     }
   };
+  const handleGoogleSuccess = async (response: CredentialResponse) => {
+    const id = toast.loading('Please wait...');
+    try {
+      await googleSignIn(response.credential!);
+      toast.update(id, { render: 'Google Sign-In succeed', type: 'success', isLoading: false, autoClose: 2000 });
+      navigate('/my-boards');
+    } catch (error) {
+      toast.update(id, { render: 'Google Sign-In failed', type: 'error', isLoading: false, autoClose: 2000 });
+    }
+  };
 
-  const { register, handleSubmit, formState, control } = useForm<SignInSchemaType>({
+  const handleGoogleFailure = () => {
+    toast.error('Google Sign-In failed');
+  };
+
+  const { register, handleSubmit, formState } = useForm<SignInSchemaType>({
     defaultValues: {
       login: '',
       password: '',
@@ -70,9 +85,14 @@ const SignIn: React.FC = () => {
             label="Password"
             errorMessage={errors.password?.message}
           />
-          <Button type="submit" className="mt-6" variant={'secondary'}>
-            Sign In
-          </Button>
+          <div className="w-full flex flex-row mt-6 gap-2">
+            <Button type="submit" className="flex-1" variant={'secondary'}>
+              Sign In
+            </Button>
+            <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_CLIENT_ID}>
+              <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} type='icon'/>
+            </GoogleOAuthProvider>
+          </div>
         </form>
         <div className="text-center flex flex-col gap-2">
           <div className="flex items-center justify-center">
