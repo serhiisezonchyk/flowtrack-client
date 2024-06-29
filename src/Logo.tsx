@@ -1,4 +1,4 @@
-import BoardLogo from './assets/logo.svg';
+import BoardLogo from '/logo.svg';
 const Logo = () => {
   return (
     <svg className="size-8 fill-white -rotate-90 stroke-foreground">
